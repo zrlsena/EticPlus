@@ -1,0 +1,80 @@
+
+header {
+    position: relative;
+    padding: 0 2rem;
+  }
+  
+  .navbar {
+    background: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    left: 0;
+    right: 0;
+    position: fixed;
+    top: 0;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 101;
+  }
+  
+  .navbar::before {
+    content: '';
+    background: rgba(0, 0, 1, 0.1);
+    backdrop-filter: blur(40px);
+    width: 100%;
+    left: 0;
+    right: 0;
+    position: fixed;
+    top: 0;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: -1;
+  }
+  
+  .navbar .logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 40px;
+    color: black;
+  }
+  
+  .navbar .links {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .navbar .toggle_btn {
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 40px;
+    display: none;
+  }
+  
+  .action-btn {
+    background-color: #0071E3;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 40px;
+  }
+  
+  .action-btn:hover {
+    scale: 1.05;
+    color: #fff;
+  
+  }
+  
+  .action-btn:active {
+    scale: 0.95;
+  }

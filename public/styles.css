@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  scroll-behavior: smooth;
+  transition: transform 0.5s ease-in-out;
+
+}
+
+body {
+  background-color: #F5F5F7;
+  background-size: cover;
+  background-position: center;
+  transition: background-color 0.3s;
+}
+
+h1 {
+  color: #1D1D1F;
+  font-size: 4em;
+  margin-bottom: 1.5em;
+  margin-top: 1em;
+  font-weight: bold;
+}
+
+
+p,
+li,
+a {
+  color: #616165;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(0, 0, 0);
+}
+

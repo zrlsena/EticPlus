@@ -1,0 +1,148 @@
+.sign-in-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0052cc;
+  height: 100vh;
+  font-family: 'Arial', sans-serif;
+}
+
+.sign-in-wrapper {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-section {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+.welcome-section h1 {
+  font-size: 2rem;
+  color: white;
+}
+
+.welcome-section p {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.sign-in-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sign-in-form h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.sign-in-form input,
+.sign-in-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.sign-in-form select {
+  width: calc(100% + 20px);
+  margin-left: -10px;
+}
+
+.dropdown-container {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.dropdown-button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background: #f0f0f0;
+}
+
+.sign-in-form h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.plans {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.plan {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  width: 30%;
+}
+
+.plan label {
+  font-size: 1.3rem;
+}
+
+.plan input {
+  margin-right: 10px;
+}
+
+.sign-up-button {
+  background: #00c853;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.sign-up-button:hover {
+  background: #00b342;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
