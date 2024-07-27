@@ -23,13 +23,6 @@ h1 {
   font-weight: bold;
 }
 
-
-p,
-li,
-a {
-  color: #616165;
-}
-
 li {
   list-style: none;
 }
@@ -38,7 +31,357 @@ a {
   text-decoration: none;
 }
 
-a:hover {
+
+/*---------------------------------SignIn---------------------------------*/
+.background{
+  background-color: #F9F1E3;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.background .img{
+  position: fixed;/*onemli!!*/ 
+  width: 100%;
+  height: 100%;
+}
+.sign-in-page {
+  position: fixed;/*onemli!!*/ 
+  width: 90%;
+  height: 90%;
+  background-color: #0758E8;
+  display: flex;
+  border-radius: 23.87px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+  padding-inline:7% ;
+}
+.sign-in-page .logo{
+  left: 3%;
+  top: 1%;
+  position: absolute;
+  height:70px;
+  width: 117.62px;
+}
+
+
+.welcome-section {
+  flex: 1;
+  text-align: center;
+  background-color: transparent;
+  width: 30%;
+  height: 80%;
+  top: 20%;
+  margin-top: 0%;
+  box-sizing: border-box;
+
+}
+.welcome-section h1 {
+  font-size: 36px;
+  color: #FBF5EB;
+  margin-bottom: 10px;
+}
+.welcome-section p {
+  font-size: 18px;
+  color: #FFFFFF;
+  margin-top: 0;
+  font-weight: lighter;
+}
+.welcome-section img {
+  width: 100%;
+  height: 90.57%;
+}
+
+
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 23.87px;
+  width: 50%;
+  height: 90%;
+  background-color: #FFFEFC;
+  z-index: 999;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sign-in-form h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 0px;
+  color: #24205D;
+  margin-top: 40px;
+}
+.sign-in-form .input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-inline: 40px;
+  margin-top: 20px;
+  margin-bottom: 3px;
+  gap: 60px;
+  box-sizing: border-box;
+}
+.sign-in-form .input input {
+  height: 40px;
+  width: 100%;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 16px;
+}
+.sign-in-form .input p {
+  font-size: 14px;
+  top: 10px;
+  left: 16px;
+  width: fit-content;
+  padding-inline: 4px;
+  background-color: #FFFEFC;
+  position: relative;
+}
+
+
+.dropdown .dropdown-button {
+  height: 40px;
+  width: 220px;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 16px;
+  text-align: center;
+  line-height: 6px;
+}
+.dropdown p {
+  font-size: 14px;
+  top: -4px;
+  left: 16px;
+  width: fit-content;
+  position: relative;
+  margin-top: 30px;
+}
+.dropdown .dropdown-menu {
+  padding: 4px;
+  font-size: 14px;
+  margin: 8px;
+  gap: 8px;
+  background-color: #F9F1E3;
+}
+.dropdown-menu li:hover {
+  background: #f0f0f0;
+}
+
+
+.package {
+  width: 100%;
+  padding-inline: 20px;
+  margin: 2%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  display: flex;
+  box-sizing: border-box;
+}
+.package div{
+  background-color: #FF544A;
+  height: 203px;
+  width: 100%;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.package-h2 {
+  font-size: 18px;
+  color: #24205D;
+  margin-top: 42px;
+  margin-bottom: 18px;
+}
+.package  h1{
+color: white;
+font-size: 14px;
+margin-bottom: 4px;
+margin-top: 0px;
+margin-left: 16px;
+margin-right: 12px;
+font-weight: bolder;
+}
+.package  p{
+  font-size: 9px;
+  color: #FFFEFC;
+  margin-bottom: 8px;
+  margin-left: 16px;
+  margin-right: 12px;
+  font-weight: lighter;
+  letter-spacing: 0.6px;
+}
+.package  ul{
+  margin-top: 8px;
+  font-size: 11px;
+  color: #FFFEFC;
+  margin-left: 16px;
+  margin-right: 12px;
+  line-height: 18px;
+  letter-spacing: 1px;
+  font-weight: normal;
+}
+.package-radio {
+  position: absolute;
+  opacity: 0;
+}
+.package-radio:checked + .package-content {
+  border: 1px solid #000000; 
+  opacity: 1;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.458);
+}
+.package-content{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signin-button {
+  height: 50px;
+  width: 80%;
+  border-radius: 14px;
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #17CC82;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+.signin-button:hover {
+  background: #00b342;
+}
+
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top:0;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+@media (max-width: 992px) {
+  .sign-in-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 23.87px;
+    width: 80%;
+    max-width: 600px; 
+    background-color: #FFFEFC; 
+    right: auto;
+  }
+  .sign-in-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #0758E8; /* Background color for the sign-in page */
+  }
+  .welcome-section {
+    display: none;
+  }
+  .navbar-signin{
+    visibility: hidden;
+  }
+}
+
+
+/*---------------------------------SignIn---------------------------------*/
+
+/*---------------------------------Navbar---------------------------------*/
+
+header {
+  position: relative;
+  padding: 0 2rem;
+}
+
+.navbar {
+  background: rgb(100, 100, 100);
+  width: 100%;
+  left: 0;
+  right: 0;
+  position: fixed;
+  top: 0;
+  height: 60px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1100;
+}
+
+.navbar-signin {
+  background: transparent;
+  width: 100%;
+  left: 42px;
+  position: fixed;
+  top: 100px;
+  height: 70px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1100;
+}
+
+.logo img {
+  width: 120px;
+  height: 100%;
+  top: 102px;
+  left: 127px;
+  padding: 10px;
+}
+
+.navbar .links a {
+  display: flex;
+  gap: 2rem;
+  color: white;
+}
+
+.navbar .links a:hover {
   color: rgb(0, 0, 0);
 }
 
+.navbar .toggle_btn {
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 40px;
+  display: none;
+}
+
+.action-btn {
+  background-color: #0071E3;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 40px;
+}
+
+.action-btn:hover {
+  scale: 1.05;
+  color: #fff;
+
+}
+
+.action-btn:active {
+  scale: 0.95;
+}
+
+/*---------------------------------Navbar---------------------------------*/
