@@ -25,11 +25,7 @@ const Login = () => {
     } catch (error) {
       console.error('Error during login:', error);
       alert('An error occurred during login.');
-    }
-
-
-
-    
+    }    
   };
 
   return (
@@ -57,7 +53,7 @@ const Login = () => {
             placeholder='Password'
           />
         </div>
-        <p>Don't have an account?<a href="/signin">  Sign up!</a></p>
+        <p>Don't have an account?<a href="/signup">  Sign up!</a></p>
         <button type="submit">Login</button>
       </form>
     </div>

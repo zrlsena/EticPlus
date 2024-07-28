@@ -26,8 +26,8 @@ export const packageData = [
       ],
     },
     {
-      value: 'Premium',
-      title: 'Premium ',
+      value: 'Platinum',
+      title: 'Platinum',
       description: 'All integrations can be activated at the same time.',
       list: [
         'My Page ',

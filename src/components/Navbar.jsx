@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const location = useLocation();
-  const isSignInPage = location.pathname === '/signin';
+  const isSignInPage = location.pathname === '/signup';
 
   return (
     <header className={isSignInPage ? 'navbar-signin' : 'navbar'}>

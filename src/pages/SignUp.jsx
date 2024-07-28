@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import API_BASE_URL from '../config';
 import axios from 'axios';
 import { packageData } from '../components/PackageData';
 
-const SignIn = () => {
+const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
   const [selectedStore, setSelectedStore] = useState('');
@@ -15,9 +15,14 @@ const SignIn = () => {
   const [storeError, setStoreError] = useState('');
   const [packageError, setPackageError] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownFontSize, setDropdownFontSize] = useState(16); 
+  const dropdownButtonRef = useRef(null);
   const navigate = useNavigate();
 
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/login';
+
+  const stores = ['General Store','Brand Store','Boutique Store', 'Crafts and Hobby Store', 'Food and Beverage Store','Cosmetics and Personal Care Store','Electronics Store','Home and Garden Store','Sports and Outdoor Store','Books and Music Store','Kids and Baby Store','Category-Specific Store']; 
+
 
   useEffect(() => {
     axios.get(apiUrl)
@@ -27,6 +32,15 @@ const SignIn = () => {
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
+
+
+  useEffect(() => {
+    if (selectedStore.length > 25) {
+      setDropdownFontSize(10); 
+    } else {
+      setDropdownFontSize(16);
+    }
+  }, [selectedStore]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -140,15 +154,18 @@ const SignIn = () => {
 
           <div className="dropdown">
             <p>Type of Store</p>
-            <button type="button" onClick={toggleDropdown} className="dropdown-button">
+            <button type="button" onClick={toggleDropdown} className="dropdown-button" ref={dropdownButtonRef}
+              style={{ fontSize: `${dropdownFontSize}px` }}>
               {selectedStore || 'Select a store'}
             </button>
             {isDropdownOpen && (
-              <ul className="dropdown-menu">
-                <li onClick={() => handleStoreSelect('Store 1')}>Store 1</li>
-                <li onClick={() => handleStoreSelect('Store 2')}>Store 2</li>
-                <li onClick={() => handleStoreSelect('Store 3')}>Store 3</li>
-              </ul>
+              <ul className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`}>
+              {stores.map((store, index) => (
+                  <li key={index} onClick={() => handleStoreSelect(store)}>
+                    {store}
+                  </li>
+                ))}
+                </ul>
             )}
             {storeError && <p className="error">{storeError}</p>}
           </div>
@@ -172,7 +189,12 @@ const SignIn = () => {
                     <p>{pkg.description}</p>
                     <ul>
                       {pkg.list && pkg.list.map((item, index) => (
-                        <li key={index}>{item}</li>
+                        <li key={index}>
+                          {item}
+                          {pkg.value === 'Platinum' && (
+                            <span> ✔</span> // Platinum paketine özel tik işareti
+                          )}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -186,7 +208,7 @@ const SignIn = () => {
             className='signin-button'
             onClick={handleUpdate}
           >
-            Sign In
+            Sign Up
           </button>
         </form>
       </div>
@@ -194,4 +216,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
