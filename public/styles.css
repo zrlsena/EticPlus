@@ -2,13 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   scroll-behavior: smooth;
   transition: transform 0.5s ease-in-out;
 
 }
-
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 
@@ -35,7 +33,22 @@ a {
   text-decoration: none;
 }
 
+::-webkit-scrollbar {
+  width: 6px; 
+}
 
+::-webkit-scrollbar-track {
+  background: transparent ; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.2);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(136, 136, 136, 0.6);
+}
 /*---------------------------------SignIn---------------------------------*/
 .background {
   background-color: #F9F1E3;
@@ -87,6 +100,7 @@ a {
   top: 20%;
   margin-top: 0%;
   box-sizing: border-box;
+  
 }
 
 .welcome-section h1 {
@@ -106,7 +120,7 @@ a {
 .welcome-section img {
   width: 100%;
   height: 90.57%;
-  
+  padding-right:10%;
 }
 
 
@@ -184,17 +198,27 @@ a {
   margin-top: 30px;
 }
 
-.dropdown .dropdown-menu {
+.dropdown .dropdown-menu{
   top: 100%;
   left: 0;
   width: 220px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin-top: 8px;
-  max-height: 100px; 
+  height: 0px; 
   overflow-y: auto;
+  transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 1;
 }
-
+.dropdown .dropdown-menu.closed {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+.dropdown .dropdown-menu.open{
+  height: 100px;
+  transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
 .dropdown-menu li {
   padding: 10px 16px;
   cursor: pointer;
@@ -226,6 +250,7 @@ a {
 }
 
 .package div {
+  font-family: 'Inter', sans-serif;
   background-color: #FF544A;
   height: 203px;
   width: 100%;
@@ -238,6 +263,7 @@ a {
 }
 
 .package-h2 {
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   color: #24205D;
   margin-top: 42px;
@@ -256,13 +282,13 @@ a {
 }
 
 .package p {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter',sans-serif;
   font-size: 9px;
-  color: #FFFEFC;
+  color: #FFFEFF;
   margin-bottom: 8px;
   margin-left: 12px;
   margin-right: 12px;
-  font-weight: lighter;
+  font-weight: 50px;
   letter-spacing: 0.6px;
 }
 
@@ -274,7 +300,7 @@ a {
   margin-left: 12px;
   line-height: 16px;
   letter-spacing: 0.6px;
-  font-weight: normal;
+  font-weight: 50px;
 }
 
 .package-radio {

@@ -17,6 +17,7 @@ const SignUp = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownFontSize, setDropdownFontSize] = useState(16); 
   const dropdownButtonRef = useRef(null);
+  const dropdownMenuRef = useRef(null);
   const navigate = useNavigate();
 
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/login';
@@ -41,6 +42,20 @@ const SignUp = () => {
       setDropdownFontSize(16);
     }
   }, [selectedStore]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target) && !dropdownButtonRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -96,7 +111,25 @@ const SignUp = () => {
     return isValid;
   };
 
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  
+  const toggleDropdown = () => {
+    if (isDropdownOpen) {
+      if (dropdownMenuRef.current) { 
+        dropdownMenuRef.current.classList.add('closed');
+        dropdownMenuRef.current.classList.remove('open');
+      }
+      setTimeout(() => {
+        setIsDropdownOpen(false);
+      }, 500); 
+    } else {
+      setIsDropdownOpen(true);
+      setTimeout(() => {
+        if (dropdownMenuRef.current) {
+          dropdownMenuRef.current.classList.add('open'); 
+        }
+      }, 0);
+    }
+  };
 
   const handleStoreSelect = (store) => {
     setSelectedStore(store);
@@ -114,6 +147,7 @@ const SignUp = () => {
   return (
     <div className='background'>
       <img className="img"src="/images/SignupBackground.png"/>
+      
       <div className="sign-in-page">
       <img className="logo"src="/images/eticLogo.png"/>
       
@@ -152,14 +186,14 @@ const SignUp = () => {
             </div>
           </div>
 
-          <div className="dropdown">
+          <div className="dropdown" ref={dropdownMenuRef}>
             <p>Type of Store</p>
             <button type="button" onClick={toggleDropdown} className="dropdown-button" ref={dropdownButtonRef}
               style={{ fontSize: `${dropdownFontSize}px` }}>
               {selectedStore || 'Select a store'}
             </button>
             {isDropdownOpen && (
-              <ul className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`}>
+              <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
               {stores.map((store, index) => (
                   <li key={index} onClick={() => handleStoreSelect(store)}>
                     {store}
@@ -186,7 +220,7 @@ const SignUp = () => {
                   />
                   <div class="package-content">
                     <h1>{pkg.title}</h1>
-                    <p>{pkg.description}</p>
+                    <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
                     <ul>
                       {pkg.list && pkg.list.map((item, index) => (
                         <li key={index}>

@@ -2,7 +2,7 @@ export const packageData = [
     {
       value: 'Silver',
       title: 'Silver ',
-      description: 'A maximum of 3 integrations can be activated at the same time.',
+      description: 'A maximum of **3 integrations** can be activated at the same time.',
       list: [
         'My Page',
         'Daily Sales Report',
@@ -15,7 +15,7 @@ export const packageData = [
     {
       value: 'Gold',
       title: 'Gold ',
-      description: 'A maximum of 3 integrations can be activated at the same time.',
+      description: 'A maximum of **3 integrations** can be activated at the same time.',
       list: [
         'My Page',
         'Daily Sales Report',
@@ -28,7 +28,7 @@ export const packageData = [
     {
       value: 'Platinum',
       title: 'Platinum',
-      description: 'All integrations can be activated at the same time.',
+      description: '**All integrations** can be activated at the same time.',
       list: [
         'My Page ',
         'Daily Sales Report',
