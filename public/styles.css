@@ -67,7 +67,7 @@ a {
   height: 100%;
 }
 
-.sign-in-page {
+.sign-page {
   position: fixed;
   /*onemli!!*/
   width: 90%;
@@ -82,7 +82,7 @@ a {
   padding-inline: 7%;
 }
 
-.sign-in-page .logo {
+.sign-page .logo {
   left: 3%;
   top: 1%;
   position: absolute;
@@ -124,7 +124,7 @@ a {
 }
 
 
-.sign-in-form {
+.sign-form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -140,15 +140,22 @@ a {
   overflow-x: hidden;
 }
 
-.sign-in-form h1 {
+.sign-form h1 {
   font-size: 36px;
   font-weight: bold;
   margin-bottom: 0px;
   color: #24205D;
   margin-top: 40px;
 }
+.sign-form h3 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #24205D;
+  margin-top: 40px;
+}
 
-.sign-in-form .input {
+.sign-form .input {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -160,7 +167,8 @@ a {
   box-sizing: border-box;
 }
 
-.sign-in-form .input input {
+
+.sign-form .input input {
   height: 40px;
   width: 100%;
   border-radius: 10px;
@@ -168,7 +176,7 @@ a {
   font-size: 16px;
 }
 
-.sign-in-form .input p {
+.sign-form .input p {
   font-size: 14px;
   top: 10px;
   left: 16px;
@@ -177,6 +185,7 @@ a {
   background-color: #FFFEFC;
   position: relative;
 }
+
 
 
 .dropdown .dropdown-button {
@@ -266,7 +275,7 @@ a {
   font-family: 'Inter', sans-serif;
   font-size: 18px;
   color: #24205D;
-  margin-top: 42px;
+  margin-top: 60px;
   margin-bottom: 18px;
 }
 
@@ -309,9 +318,9 @@ a {
 }
 
 .package-radio:checked+.package-content {
-  border: 1px solid #000000;
+  border: 2px solid #B33B34;
   opacity: 1;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.458);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
 }
 
 .package-content {
@@ -322,21 +331,21 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-right: 12px; /* Sağda boşluk bırakmak için */
+  padding-right: 12px; 
 }
 
 .package-content li span {
   text-align: right;
-  margin-left: auto; /* Tik işaretini sağa hizalamak için */
+  margin-left: auto; 
 }
 
-.signin-button {
-  height: 50px;
+.sign-button {
+  height: 50px ;
   width: 80%;
   border-radius: 14px;
   font-size: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 40px ;
   background: #17CC82;
   color: white;
   border: none;
@@ -344,7 +353,9 @@ a {
   box-sizing: border-box;
 }
 
-.signin-button:hover {
+
+
+.sign-button:hover {
   background: #00b342;
 }
 
@@ -368,8 +379,11 @@ a {
     background-color: #FFFEFC;
     right: auto;
   }
-
-  .sign-in-page {
+  .sign-page .logo{
+    width: 94.10px; 
+    height: 56px;
+  }
+  .sign-page {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -381,13 +395,90 @@ a {
     display: none;
   }
 
-  .navbar-signin {
+  .navbar-sign {
     visibility: hidden;
   }
 }
 
 
 /*---------------------------------SignIn---------------------------------*/
+/*---------------------------------Login---------------------------------*/
+.sign-form .login-input input{
+  height: 50px;
+  width:400px;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 16px;
+}
+@media (max-width: 1100px){
+  .sign-form .login-input input{
+    height: 50px;
+    width:100%;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 16px;
+  }
+  
+}
+.sign-form .login-input {
+  display: flex;
+  flex-direction: column;  
+  align-items: center;     
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 20px;  
+  gap: 40px;            
+  box-sizing: border-box;
+  
+  
+}
+
+.sign-form .login-input p {
+  font-size: 14px;
+  top: 10px;
+  left: 16px;
+  width: fit-content;
+  padding-inline: 4px;
+  background-color: #FFFEFC;
+  position: relative;
+  transition: top 0.3s, font-size 0.3s;
+}
+
+.question {
+  font-size: 14px;
+  color: #24205D;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.question a {
+  color: #0758E8;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.question a:hover {
+  text-decoration: underline;
+}
+
+.login-button {
+  height: 50px;
+  width: 70%;
+  border-radius: 14px;
+  font-size: 20px;
+  background: #17CC82;
+  margin-top: 30px;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+.login-button:hover {
+  background: #00b342;
+}
+
+
+/*---------------------------------Login---------------------------------*/
 
 /*---------------------------------Navbar---------------------------------*/
 
@@ -411,7 +502,7 @@ header {
   z-index: 1100;
 }
 
-.navbar-signin {
+.navbar-sign {
   background: transparent;
   width: 100%;
   left: 42px;

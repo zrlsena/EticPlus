@@ -6,7 +6,7 @@ function Navbar() {
   const isSignInPage = location.pathname === '/signup';
 
   return (
-    <header className={isSignInPage ? 'navbar-signin' : 'navbar'}>
+    <header className={isSignInPage ? 'navbar-sign' : 'navbar'}>
       <div className="logo">
         <Link to="/">
           <img src="/images/eticLogo.png" alt="Etic PLUS Logo" />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef  } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import API_BASE_URL from '../config';
 import axios from 'axios';
@@ -97,6 +97,15 @@ const SignUp = () => {
       setPasswordError('Password must be between 4 and 15 characters.');
       isValid = false;
     }
+    if (!/[A-Z]/.test(password)) {
+      setPasswordError('Password must contain at least one uppercase letter.');
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      setPasswordError('Password must contain at least one punctuation mark.');
+    }
+    if (/\s/.test(password)) {
+      setPasswordError('Password must not contain spaces.');
+    }
 
     if (selectedStore === '') {
       setStoreError('Please select a store.');
@@ -148,8 +157,10 @@ const SignUp = () => {
     <div className='background'>
       <img className="img"src="/images/SignupBackground.png"/>
       
-      <div className="sign-in-page">
-      <img className="logo"src="/images/eticLogo.png"/>
+      <div className="sign-page">
+      <Link to="/">
+          <img className="logo"src="/images/eticLogo.png" alt="Etic PLUS Logo" />
+        </Link>
       
         <div className="welcome-section">
           <h1>Welcome to EticPlus</h1>
@@ -157,7 +168,7 @@ const SignUp = () => {
           <img src="/images/eticSignup.png" alt="Etic PLUS Logo" />
         </div>
 
-        <form onSubmit={handleSignIn} className="sign-in-form">
+        <form onSubmit={handleSignIn} className="sign-form">
           <h1>Sign Up</h1>
 
           <div className='input'>
@@ -239,7 +250,7 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className='signin-button'
+            className='sign-button'
             onClick={handleUpdate}
           >
             Sign Up
