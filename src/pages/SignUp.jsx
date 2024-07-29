@@ -8,8 +8,8 @@ import { packageData } from '../components/PackageData';
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedStore, setSelectedStore] = useState('');
-  const [selectedPackage, setSelectedPackage] = useState('');
+  const [description, setDescription] = useState('');
+  const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [storeError, setStoreError] = useState('');
@@ -20,28 +20,28 @@ const SignUp = () => {
   const dropdownMenuRef = useRef(null);
   const navigate = useNavigate();
 
-  const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/login';
+  const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/register';
 
   const stores = ['General Store','Brand Store','Boutique Store', 'Crafts and Hobby Store', 'Food and Beverage Store','Cosmetics and Personal Care Store','Electronics Store','Home and Garden Store','Sports and Outdoor Store','Books and Music Store','Kids and Baby Store','Category-Specific Store']; 
+/*
 
+useEffect(() => {
+  axios.get(apiUrl)
+    .then(response => {
+      setStoreName(response.data.storeName);
+      setPassword(response.data.password);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+}, []);
 
+*/
   useEffect(() => {
-    axios.get(apiUrl)
-      .then(response => {
-        setStoreName(response.data.storeName);
-        setPassword(response.data.password);
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
-
-
-  useEffect(() => {
-    if (selectedStore.length > 25) {
+    if (description.length > 25) {
       setDropdownFontSize(10); 
     } else {
       setDropdownFontSize(16);
     }
-  }, [selectedStore]);
+  }, [description]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -65,9 +65,15 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/login`, {
+      const response = await axios.post(`${API_BASE_URL}/register`, {
         storeName,
+        description,
         password,
+        packageType,
+      },{
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
 
       if (response.status === 200) {
@@ -107,12 +113,12 @@ const SignUp = () => {
       setPasswordError('Password must not contain spaces.');
     }
 
-    if (selectedStore === '') {
+    if (description === '') {
       setStoreError('Please select a store.');
       isValid = false;
     }
 
-    if (!selectedPackage) {
+    if (!packageType) {
       setPackageError('Please select a package.');
       isValid = false;
     }
@@ -141,13 +147,16 @@ const SignUp = () => {
   };
 
   const handleStoreSelect = (store) => {
-    setSelectedStore(store);
+    setDescription(store);
     setIsDropdownOpen(false);
   };
 
   const handleUpdate = () => {
 
-    const postData = { storeName, password };
+    const postData = {  storeName,
+      description,
+      password,
+      packageType };
     axios.post(apiUrl, postData)
       .then(response => console.log('Data updated successfully:', response.data))
       .catch(error => console.error('Error posting data:', error));
@@ -201,7 +210,7 @@ const SignUp = () => {
             <p>Type of Store</p>
             <button type="button" onClick={toggleDropdown} className="dropdown-button" ref={dropdownButtonRef}
               style={{ fontSize: `${dropdownFontSize}px` }}>
-              {selectedStore || 'Select a store'}
+              {description || 'Select a store'}
             </button>
             {isDropdownOpen && (
               <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
@@ -225,8 +234,8 @@ const SignUp = () => {
                   <input 
                     type="radio"
                     value={pkg.value}
-                    checked={selectedPackage === pkg.value}
-                    onChange={(e) => setSelectedPackage(e.target.value)}
+                    checked={packageType === pkg.value}
+                    onChange={(e) => setPackageType(e.target.value)}
                     class="package-radio"
                   />
                   <div class="package-content">

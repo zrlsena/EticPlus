@@ -1,6 +1,6 @@
 export const packageData = [
     {
-      value: 'Silver',
+      value: 'SILVER',
       title: 'Silver ',
       description: 'A maximum of **3 integrations** can be activated at the same time.',
       list: [
@@ -13,7 +13,7 @@ export const packageData = [
       ],
     },
     {
-      value: 'Gold',
+      value: 'GOLD',
       title: 'Gold ',
       description: 'A maximum of **3 integrations** can be activated at the same time.',
       list: [
@@ -26,7 +26,7 @@ export const packageData = [
       ],
     },
     {
-      value: 'Platinum',
+      value: 'PLATINUM',
       title: 'Platinum',
       description: '**All integrations** can be activated at the same time.',
       list: [
