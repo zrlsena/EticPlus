@@ -19,7 +19,7 @@ const SignUp = () => {
   const dropdownMenuRef = useRef(null);
   const navigate = useNavigate();
 
-  const apiUrl = 'http://bilir-d108588758e4.herokuapp.com/api/register';
+  const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
 
   const stores = ['General Store', 'Brand Store', 'Boutique Store', 'Crafts and Hobby Store', 'Food and Beverage Store', 'Cosmetics and Personal Care Store', 'Electronics Store', 'Home and Garden Store', 'Sports and Outdoor Store', 'Books and Music Store', 'Kids and Baby Store', 'Category-Specific Store'];
   /*
