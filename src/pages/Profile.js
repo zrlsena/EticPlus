@@ -6,9 +6,7 @@ function Profile() {
   return (
   
    <div>
-    <body>
     <Navbar/>
-    </body>
    </div>
   
   );

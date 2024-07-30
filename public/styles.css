@@ -80,6 +80,8 @@ a {
   justify-content: space-between;
   margin: 20px;
   padding-inline: 7%;
+  box-sizing: border-box;
+  overflow: hidden; 
 }
 
 .sign-page .logo {
@@ -95,34 +97,16 @@ a {
   flex: 1;
   text-align: center;
   background-color: transparent;
-  width: 30%;
-  height: 80%;
-  top: 20%;
-  margin-top: 0%;
   box-sizing: border-box;
-  
-}
-
-.welcome-section h1 {
-  font-size: 36px;
-  color: #FBF5EB;
-  margin-bottom: 10px;
-  font-family: 'Inter', sans-serif;
-}
-
-.welcome-section p {
-  font-size: 18px;
-  color: #FFFFFF;
-  margin-top: 0;
-  font-weight: lighter;
+  overflow: hidden; 
+  align-items: center;
 }
 
 .welcome-section img {
-  width: 100%;
-  height: 90.57%;
-  padding-right:10%;
+  width: 452.57px;
+  height: 481.72px;
+  padding-right:10px;
 }
-
 
 .sign-form {
   display: flex;
@@ -134,8 +118,7 @@ a {
   background-color: #FFFEFC;
   z-index: 999;
   box-sizing: border-box;
-  max-width: 100%;
-  padding: 20px;
+  max-width: 583.34px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -143,16 +126,9 @@ a {
 .sign-form h1 {
   font-size: 36px;
   font-weight: bold;
-  margin-bottom: 0px;
   color: #24205D;
-  margin-top: 40px;
-}
-.sign-form h3 {
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #24205D;
-  margin-top: 40px;
+  margin-top: 36px;
+  margin-bottom: 18px;
 }
 
 .sign-form .input {
@@ -160,17 +136,14 @@ a {
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-inline: 40px;
-  margin-top: 20px;
-  margin-bottom: 3px;
-  gap: 60px;
   box-sizing: border-box;
+  flex-direction: column;
 }
 
 
 .sign-form .input input {
   height: 40px;
-  width: 100%;
+  width: 500px;
   border-radius: 10px;
   padding: 16px;
   font-size: 16px;
@@ -185,37 +158,51 @@ a {
   background-color: #FFFEFC;
   position: relative;
 }
-
-
-
-.dropdown .dropdown-button {
+.dropdown {
+  position: relative; 
+}
+.dropdown-button {
   height: 40px;
-  width: 220px;
+  width: 500px;
   border-radius: 10px;
   padding: 16px;
   font-size: 16px;
-  text-align: center;
+  text-align: left;
   line-height: 6px;
+  background-color: #FFFEFC;
+  color: gray;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.dropdown-button img {
+  position: absolute; /* img'yi butonun en sağında tutmak için */
+  right: 16px; /* Butonun sağında boşluk bırakır */
+  transform: translateY(-50%) rotate(0deg); /* Dikeyde ortalar ve varsayılan dönüşüm */
+}
+.dropdown-button.open img {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .dropdown p {
   font-size: 14px;
-  top: -4px;
+  top: 10px;
   left: 16px;
   width: fit-content;
   position: relative;
-  margin-top: 30px;
- /*
-  top: 10px;
-  padding-inline: 4px;
+  margin-top: 0px;
   background-color: #FFFEFC;
- */
+  padding-inline: 4px;
+
+}
+.dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .dropdown .dropdown-menu{
+  position: absolute;
   top: 100%;
   left: 0;
-  width: 220px;
+  width: 500px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin-top: 8px;
@@ -240,25 +227,24 @@ a {
 
 .dropdown-menu li:hover {
   border: 1px solid #000000;
-  background-color: #D5CEC2 !important;
+  background-color: #d0d0d0 !important;
   opacity: 1;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 .dropdown-menu li:nth-child(odd) {
-  background-color: #EDE5D8; 
+  background-color: #f0f0f0; 
 }
 .dropdown-menu li:nth-child(even) {
-  background-color: #F9F1E3; 
+  background-color: #e0e0e0; 
 }
 
 .package {
   font-family: 'Inter', sans-serif;
-  width: 100%;
-  padding-inline: 20px;
+  width: 500px;
   margin: 2%;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
   display: flex;
   box-sizing: border-box;
 }
@@ -269,27 +255,27 @@ a {
   height: 203px;
   width: 100%;
   border-radius: 24px;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  padding-top: 1px;
+  padding-top: 0px;
   
 }
 
-.package-h2 {
+.package-h2 h2{
   font-family: 'Inter', sans-serif;
   font-size: 18px;
   color: #24205D;
-  margin-top: 60px;
-  margin-bottom: 18px;
+  margin-top: 36px;
+  margin-bottom: 0px;
 }
-
+.package-h2 .error{
+  margin-left: 10px;
+}
 .package h1 {
   font-family: 'Inter', sans-serif;
   color: white;
   font-size: 14px;
   margin-bottom: 4px;
-  margin-top: 0px;
+  margin-top: 10px;
   margin-left: 12px;
   margin-right: 12px;
   font-weight: bolder;
@@ -311,6 +297,7 @@ a {
   margin-top: 8px;
   font-size: 11px;
   color: #FFFEFC;
+  margin-right: 12px;
   margin-left: 12px;
   line-height: 16px;
   letter-spacing: 0.6px;
@@ -323,23 +310,19 @@ a {
 }
 
 .package-radio:checked+.package-content {
-  border: 2px solid #B33B34;
   opacity: 1;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  height: 203px;
 }
 
-.package-content {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-}
-.package-content li {
+.package li {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-right: 12px; 
 }
 
-.package-content li span {
+.package li span {
   text-align: right;
   margin-left: auto; 
 }
@@ -368,10 +351,13 @@ a {
 .error {
   color: red;
   font-size: 0.9rem;
-  margin-top: 0;
+  margin-top: -2px;
   margin-bottom: 16px;
-  position: relative;
+  position:relative;
+  margin-right: 20px;
+  margin-left: -10px;
 }
+
 
 @media (max-width: 992px) {
   .sign-in-form {
@@ -408,6 +394,13 @@ a {
 
 /*---------------------------------SignIn---------------------------------*/
 /*---------------------------------Login---------------------------------*/
+.sign-form h3 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #24205D;
+  margin-top: 40px;
+}
 .sign-form .login-input input{
   height: 50px;
   width:400px;

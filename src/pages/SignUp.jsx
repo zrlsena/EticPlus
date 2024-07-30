@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef  } from 'react';
-import {Link, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config';
 import axios from 'axios';
 import { packageData } from '../components/PackageData';
@@ -8,40 +7,40 @@ import { packageData } from '../components/PackageData';
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
   const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [storeError, setStoreError] = useState('');
   const [packageError, setPackageError] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownFontSize, setDropdownFontSize] = useState(16); 
+  const [dropdownFontSize, setDropdownFontSize] = useState(16);
   const dropdownButtonRef = useRef(null);
   const dropdownMenuRef = useRef(null);
   const navigate = useNavigate();
 
-  const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/register';
+  const apiUrl = 'http://bilir-d108588758e4.herokuapp.com/api/register';
 
-  const stores = ['General Store','Brand Store','Boutique Store', 'Crafts and Hobby Store', 'Food and Beverage Store','Cosmetics and Personal Care Store','Electronics Store','Home and Garden Store','Sports and Outdoor Store','Books and Music Store','Kids and Baby Store','Category-Specific Store']; 
-/*
-
-useEffect(() => {
-  axios.get(apiUrl)
-    .then(response => {
-      setStoreName(response.data.storeName);
-      setPassword(response.data.password);
-    })
-    .catch(error => console.error('Error fetching data:', error));
-}, []);
-
-*/
+  const stores = ['General Store', 'Brand Store', 'Boutique Store', 'Crafts and Hobby Store', 'Food and Beverage Store', 'Cosmetics and Personal Care Store', 'Electronics Store', 'Home and Garden Store', 'Sports and Outdoor Store', 'Books and Music Store', 'Kids and Baby Store', 'Category-Specific Store'];
+  /*
+  
   useEffect(() => {
-    if (description.length > 25) {
-      setDropdownFontSize(10); 
+    axios.get(apiUrl)
+      .then(response => {
+        setStoreName(response.data.storeName);
+        setPassword(response.data.password);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+  
+  */
+  useEffect(() => {
+    if (category.length > 25) {
+      setDropdownFontSize(10);
     } else {
       setDropdownFontSize(16);
     }
-  }, [description]);
+  }, [category]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -65,27 +64,34 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/register`, {
-        storeName,
-        description,
-        password,
-        packageType,
-      },{
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          storeName,
+          category,
+          password,
+          packageType,
+        }),
       });
 
-      if (response.status === 200) {
-        console.log('Login successful:', response.data);
-        navigate('/login'); // Başarılı girişten sonra yönlendirme
-      } else {
-        console.error('Login failed:', response.data);
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
       }
+
+      const data = await response.json();
+
+      console.log('Sign Up successful:', data);
+      navigate('/login'); // Başarılı girişten sonra yönlendirme
     } catch (error) {
       console.error('An error occurred:', error);
     }
   };
+
+
 
   const validateForm = () => {
     let isValid = true;
@@ -113,7 +119,7 @@ useEffect(() => {
       setPasswordError('Password must not contain spaces.');
     }
 
-    if (description === '') {
+    if (category === '') {
       setStoreError('Please select a store.');
       isValid = false;
     }
@@ -126,37 +132,39 @@ useEffect(() => {
     return isValid;
   };
 
-  
+
   const toggleDropdown = () => {
     if (isDropdownOpen) {
-      if (dropdownMenuRef.current) { 
+      if (dropdownMenuRef.current) {
         dropdownMenuRef.current.classList.add('closed');
         dropdownMenuRef.current.classList.remove('open');
       }
       setTimeout(() => {
         setIsDropdownOpen(false);
-      }, 500); 
+      }, 500);
     } else {
       setIsDropdownOpen(true);
       setTimeout(() => {
         if (dropdownMenuRef.current) {
-          dropdownMenuRef.current.classList.add('open'); 
+          dropdownMenuRef.current.classList.add('open');
         }
       }, 0);
     }
   };
 
   const handleStoreSelect = (store) => {
-    setDescription(store);
+    setCategory(store);
     setIsDropdownOpen(false);
   };
 
   const handleUpdate = () => {
 
-    const postData = {  storeName,
-      description,
+    const postData = {
+      storeName,
+      category,
       password,
-      packageType };
+      packageType
+    };
     axios.post(apiUrl, postData)
       .then(response => console.log('Data updated successfully:', response.data))
       .catch(error => console.error('Error posting data:', error));
@@ -164,24 +172,22 @@ useEffect(() => {
 
   return (
     <div className='background'>
-      <img className="img"src="/images/SignupBackground.png"/>
-      
+      <img className="img" src="/images/SignupBackground.png" alt="Welcome" />
+
       <div className="sign-page">
-      <Link to="/">
-          <img className="logo"src="/images/eticLogo.png" alt="Etic PLUS Logo" />
+        <Link to="/">
+          <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
         </Link>
-      
+
         <div className="welcome-section">
-          <h1>Welcome to EticPlus</h1>
-          <p>Continue your mobile journey with us!</p>
-          <img src="/images/eticSignup.png" alt="Etic PLUS Logo" />
+          <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
         </div>
 
         <form onSubmit={handleSignIn} className="sign-form">
           <h1>Sign Up</h1>
 
           <div className='input'>
-            <div>
+            <div >
               <p>Store Name</p>
               <input
                 type="text"
@@ -204,53 +210,56 @@ useEffect(() => {
               />
               {passwordError && <p className="error">{passwordError}</p>}
             </div>
-          </div>
 
-          <div className="dropdown" ref={dropdownMenuRef}>
-            <p>Type of Store</p>
-            <button type="button" onClick={toggleDropdown} className="dropdown-button" ref={dropdownButtonRef}
-              style={{ fontSize: `${dropdownFontSize}px` }}>
-              {description || 'Select a store'}
-            </button>
-            {isDropdownOpen && (
-              <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
-              {stores.map((store, index) => (
-                  <li key={index} onClick={() => handleStoreSelect(store)}>
-                    {store}
-                  </li>
-                ))}
+            <div className="dropdown" ref={dropdownMenuRef}>
+              <p>Type of Store</p>
+              <button type="button" onClick={toggleDropdown} className={`dropdown-button ${isDropdownOpen ? 'open' : ''}`} 
+ ref={dropdownButtonRef}
+                style={{ fontSize: `${dropdownFontSize}px` }}>
+                {category || 'Select a store'}
+                <img src="/images/dropdown.png" alt="dropdown" />
+              </button>
+              {!isDropdownOpen && storeError && <p className="error">{storeError}</p>}
+              {isDropdownOpen && (
+                <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
+                  {stores.map((store, index) => (
+                    <li key={index} onClick={() => handleStoreSelect(store)}>
+                      {store}
+                    </li>
+                  ))}
                 </ul>
-            )}
-            {storeError && <p className="error">{storeError}</p>}
+              )}
+            </div>
           </div>
-
-          <h2 className='package-h2'>Choose Your Plan</h2>
-          {packageError && <p className="error">{packageError}</p>}
-
+          <div className='package-h2'>
+            <h2 >Choose Your Plan</h2>
+            
+          </div>
           <div className='package'>
             {packageData.map(pkg => (
               <div key={pkg.value} >
                 <label >
-                  <input 
+                  <input
                     type="radio"
                     value={pkg.value}
                     checked={packageType === pkg.value}
                     onChange={(e) => setPackageType(e.target.value)}
-                    class="package-radio"
+                    className="package-radio"
                   />
-                  <div class="package-content">
+                  <div className="package-content">
                     <h1>{pkg.title}</h1>
                     <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
                     <ul>
                       {pkg.list && pkg.list.map((item, index) => (
                         <li key={index}>
                           {item}
-                          {pkg.value === 'Platinum' && (
+                          {pkg.value === 'PLATINUM' && (
                             <span> ✔</span> // Platinum paketine özel tik işareti
                           )}
                         </li>
                       ))}
                     </ul>
+                    
                   </div>
                 </label>
               </div>
