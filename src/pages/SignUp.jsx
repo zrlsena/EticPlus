@@ -195,6 +195,7 @@ const SignUp = () => {
                 onChange={(e) => setStoreName(e.target.value)}
                 minLength="3"
                 maxLength="20"
+                placeholder='Between 3 and 20 characters'
               />
               {storeNameError && <p className="error">{storeNameError}</p>}
             </div>
@@ -207,10 +208,11 @@ const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 minLength="4"
                 maxLength="15"
+                placeholder='Create strong password'
               />
               {passwordError && <p className="error">{passwordError}</p>}
             </div>
-
+            </div>
             <div className="dropdown" ref={dropdownMenuRef}>
               <p>Type of Store</p>
               <button type="button" onClick={toggleDropdown} className={`dropdown-button ${isDropdownOpen ? 'open' : ''}`} 
@@ -229,7 +231,8 @@ const SignUp = () => {
                   ))}
                 </ul>
               )}
-            </div>
+              
+            
           </div>
           <div className='package-h2'>
             <h2 >Choose Your Plan</h2>

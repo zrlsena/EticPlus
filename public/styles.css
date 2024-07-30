@@ -52,7 +52,7 @@ a {
 /*---------------------------------SignIn---------------------------------*/
 .background {
   background-color: #F9F1E3;
-  position: fixed;
+  position: absolute;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -61,15 +61,14 @@ a {
 }
 
 .background .img {
-  position: fixed;
-  /*onemli!!*/
+  position: absolute;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .sign-page {
-  position: fixed;
-  /*onemli!!*/
+  position: relative;
   width: 90%;
   height: 90%;
   background-color: #0758E8;
@@ -78,10 +77,10 @@ a {
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
-  margin: 20px;
-  padding-inline: 7%;
+  padding-inline: 50px;
   box-sizing: border-box;
   overflow: hidden; 
+  
 }
 
 .sign-page .logo {
@@ -92,20 +91,23 @@ a {
   width: 117.62px;
 }
 
-
 .welcome-section {
-  flex: 1;
-  text-align: center;
+  display: flex;
   background-color: transparent;
   box-sizing: border-box;
   overflow: hidden; 
   align-items: center;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
 }
 
 .welcome-section img {
   width: 452.57px;
   height: 481.72px;
-  padding-right:10px;
+  padding: 0;
+  margin-top: 0; 
+  transform: translateY(20px);
 }
 
 .sign-form {
@@ -116,9 +118,7 @@ a {
   width: 50%;
   height: 90%;
   background-color: #FFFEFC;
-  z-index: 999;
   box-sizing: border-box;
-  max-width: 583.34px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -131,22 +131,30 @@ a {
   margin-bottom: 18px;
 }
 
-.sign-form .input {
+.sign-form .input{
+  display: flex;
+  height: 40px;
+  box-sizing: border-box;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px; 
+}
+
+.sign-form .input input {
+  flex: 1;
+  height: 100%;
+  border-radius: 10px;
+  font-size: 14px;
+  box-sizing: border-box; 
+  padding: 10px;
+width: 245px;
+}
+.sign-form .input-dropdown {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-  flex-direction: column;
-}
-
-
-.sign-form .input input {
-  height: 40px;
   width: 500px;
-  border-radius: 10px;
-  padding: 16px;
-  font-size: 14px;
+  box-sizing: border-box;
 }
 
 .sign-form .input p {
@@ -166,9 +174,9 @@ a {
   width: 500px;
   border-radius: 10px;
   padding: 16px;
-  font-size: 16px;
+  font-size: 12px;
   text-align: left;
-  line-height: 6px;
+  line-height: 50%;
   background-color: #FFFEFC;
   color: gray;
   box-sizing: border-box;
@@ -184,8 +192,8 @@ a {
 }
 
 .dropdown p {
-  font-size: 14px;
-  top: 10px;
+  font-size: 10px;
+  top: 7px;
   left: 16px;
   width: fit-content;
   position: relative;
@@ -195,17 +203,18 @@ a {
 
 }
 .dropdown-menu::-webkit-scrollbar-track {
-  background: transparent;
+  background: #e0e0e0;
 }
-
+.dropdown .dropdown-menu.open + .dropdown-button{
+  border-radius: 0px;
+}
 .dropdown .dropdown-menu{
   position: absolute;
   top: 100%;
   left: 0;
   width: 500px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin-top: 8px;
+  margin-top: 0px;
   height: 0px; 
   overflow-y: auto;
   transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
@@ -221,8 +230,9 @@ a {
   transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 .dropdown-menu li {
-  padding: 10px 16px;
+  padding: 5px 16px;
   cursor: pointer;
+  font-size: 12px;
 }
 
 .dropdown-menu li:hover {
@@ -252,7 +262,7 @@ a {
 .package div {
   font-family: 'Inter', sans-serif;
   background-color: #FF544A;
-  height: 203px;
+  height: 100%;
   width: 100%;
   border-radius: 24px;
   justify-content: center;
@@ -312,7 +322,7 @@ a {
 .package-radio:checked+.package-content {
   opacity: 1;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-  height: 203px;
+  height: 100%;
 }
 
 .package li {
@@ -358,7 +368,16 @@ a {
   margin-left: -10px;
 }
 
-
+@media (min-width: 1800px) {
+  .background{
+    background-color: #000000;
+  }
+}
+@media (min-width: 992px) and (max-width: 1300px) {
+  .background{
+    background-color: red;
+  }
+}
 @media (max-width: 992px) {
   .sign-in-form {
     display: flex;
