@@ -7,6 +7,7 @@
   transition: transform 0.5s ease-in-out;
 
 }
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 
@@ -34,11 +35,11 @@ a {
 }
 
 ::-webkit-scrollbar {
-  width: 6px; 
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent ; 
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -49,6 +50,7 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(136, 136, 136, 0.6);
 }
+
 /*---------------------------------SignIn---------------------------------*/
 .background {
   background-color: #F9F1E3;
@@ -79,8 +81,8 @@ a {
   justify-content: space-between;
   padding-inline: 50px;
   box-sizing: border-box;
-  overflow: hidden; 
-  
+  overflow: hidden;
+
 }
 
 .sign-page .logo {
@@ -95,7 +97,7 @@ a {
   display: flex;
   background-color: transparent;
   box-sizing: border-box;
-  overflow: hidden; 
+  overflow: hidden;
   align-items: center;
   height: 100vh;
   align-items: center;
@@ -106,7 +108,7 @@ a {
   width: 452.57px;
   height: 481.72px;
   padding: 0;
-  margin-top: 0; 
+  margin-top: 0;
   transform: translateY(20px);
 }
 
@@ -120,24 +122,23 @@ a {
   background-color: #FFFEFC;
   box-sizing: border-box;
   overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .sign-form h1 {
   font-size: 36px;
   font-weight: bold;
   color: #24205D;
-  margin-top: 36px;
+  margin-top: 36x;
   margin-bottom: 18px;
 }
 
-.sign-form .input{
+.sign-form .input {
   display: flex;
   height: 40px;
   box-sizing: border-box;
   gap: 10px;
   justify-content: center;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .sign-form .input input {
@@ -145,10 +146,11 @@ a {
   height: 100%;
   border-radius: 10px;
   font-size: 14px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   padding: 10px;
-width: 245px;
+  width: 245px;
 }
+
 .sign-form .input-dropdown {
   display: flex;
   justify-content: center;
@@ -166,27 +168,34 @@ width: 245px;
   background-color: #FFFEFC;
   position: relative;
 }
+
 .dropdown {
-  position: relative; 
+  position: relative;
 }
+
 .dropdown-button {
   height: 40px;
   width: 500px;
   border-radius: 10px;
   padding: 16px;
-  font-size: 12px;
   text-align: left;
   line-height: 50%;
   background-color: #FFFEFC;
   color: gray;
   box-sizing: border-box;
   cursor: pointer;
+  font-size: 14px;
 }
+
 .dropdown-button img {
-  position: absolute; /* img'yi butonun en sağında tutmak için */
-  right: 16px; /* Butonun sağında boşluk bırakır */
-  transform: translateY(-50%) rotate(0deg); /* Dikeyde ortalar ve varsayılan dönüşüm */
+  position: absolute;
+  /* img'yi butonun en sağında tutmak için */
+  right: 16px;
+  /* Butonun sağında boşluk bırakır */
+  transform: translateY(-50%) rotate(0deg);
+  /* Dikeyde ortalar ve varsayılan dönüşüm */
 }
+
 .dropdown-button.open img {
   transform: translateY(-50%) rotate(180deg);
 }
@@ -202,33 +211,39 @@ width: 245px;
   padding-inline: 4px;
 
 }
+
 .dropdown-menu::-webkit-scrollbar-track {
   background: #e0e0e0;
 }
-.dropdown .dropdown-menu.open + .dropdown-button{
+
+.dropdown .dropdown-menu.open+.dropdown-button {
   border-radius: 0px;
 }
-.dropdown .dropdown-menu{
+
+.dropdown .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
   width: 500px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   margin-top: 0px;
-  height: 0px; 
+  height: 0px;
   overflow-y: auto;
   transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
   opacity: 1;
 }
+
 .dropdown .dropdown-menu.closed {
   height: 0;
   overflow: hidden;
   transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
-.dropdown .dropdown-menu.open{
+
+.dropdown .dropdown-menu.open {
   height: 100px;
   transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
+
 .dropdown-menu li {
   padding: 5px 16px;
   cursor: pointer;
@@ -241,11 +256,13 @@ width: 245px;
   opacity: 1;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
+
 .dropdown-menu li:nth-child(odd) {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
 }
+
 .dropdown-menu li:nth-child(even) {
-  background-color: #e0e0e0; 
+  background-color: #e0e0e0;
 }
 
 .package {
@@ -257,6 +274,7 @@ width: 245px;
   gap: 10px;
   display: flex;
   box-sizing: border-box;
+
 }
 
 .package div {
@@ -267,32 +285,34 @@ width: 245px;
   border-radius: 24px;
   justify-content: center;
   padding-top: 0px;
-  
+
 }
 
-.package-h2 h2{
+.package-h2 h2 {
   font-family: 'Inter', sans-serif;
   font-size: 18px;
   color: #24205D;
   margin-top: 36px;
   margin-bottom: 0px;
 }
-.package-h2 .error{
+
+.package-h2 .error {
   margin-left: 10px;
 }
+
 .package h1 {
   font-family: 'Inter', sans-serif;
   color: white;
   font-size: 14px;
   margin-bottom: 4px;
-  margin-top: 10px;
+  margin-top: 12px;
   margin-left: 12px;
   margin-right: 12px;
   font-weight: bolder;
 }
 
 .package p {
-  font-family: 'Inter',sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   color: #FFFEFF;
   margin-bottom: 8px;
@@ -312,38 +332,47 @@ width: 245px;
   line-height: 16px;
   letter-spacing: 0.6px;
   font-weight: 50px;
+  margin-bottom: 12px;
 }
 
 .package-radio {
   position: absolute;
   opacity: 0;
+
+}
+
+.package .wrapper label {
+  display: flex;
+  height: 100%;
 }
 
 .package-radio:checked+.package-content {
   opacity: 1;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
   height: 100%;
+  background-color: #9C332D;
 }
 
 .package li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-right: 12px; 
+  padding-right: 12px;
 }
 
 .package li span {
   text-align: right;
-  margin-left: auto; 
+  margin-left: auto;
+
 }
 
 .sign-button {
-  height: 50px ;
+  height: 40px;
   width: 80%;
   border-radius: 14px;
-  font-size: 20px;
-  margin-top: 30px;
-  margin-bottom: 40px ;
+  font-size: 18px;
+  margin-top: 18px;
+  margin-bottom: 36px;
   background: #17CC82;
   color: white;
   border: none;
@@ -362,12 +391,13 @@ width: 245px;
   color: red;
   font-size: 0.9rem;
   margin-top: -2px;
-  margin-bottom: 16px;
-  position:relative;
+  margin-bottom: 0px;
+  position: relative;
   margin-right: 20px;
   margin-left: -10px;
 }
 
+/*
 @media (min-width: 1800px) {
   .background{
     background-color: #000000;
@@ -377,28 +407,216 @@ width: 245px;
   .background{
     background-color: red;
   }
-}
-@media (max-width: 992px) {
-  .sign-in-form {
+}*/
+
+@media (max-width: 1200px) {
+  .sign-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 23.87px;
-    width: 80%;
-    max-width: 600px;
+    width: 70%;
+    height: 90%;
     background-color: #FFFEFC;
-    right: auto;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+
   }
-  .sign-page .logo{
-    width: 94.10px; 
+  .sign-form h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #24205D;
+    margin-top: 36x;
+    margin-bottom: 44px;
+  }
+  .sign-form .input {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .sign-form .input input {
+    flex: 1;
+    border-radius: 10px;
+    font-size: 12px;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 300px;
+    height: 40px;
+  }
+
+  .dropdown {
+    position: relative;
+    width: 300px;
+    margin-top: 20px;
+  }
+
+  .sign-page .logo {
+    width: 94.10px;
     height: 56px;
   }
-  .sign-page {
+
+  .dropdown-button {
+    font-size: 12px;
+    width: 100%;
+    height: 26px;
+  }
+
+  .dropdown-menu {
+    width: 200px;
+  }
+  .package h1 {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-top: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+    font-weight: bolder;
+  }
+  .package {
+    font-family: 'Inter', sans-serif;
+    width: 50%;
+    align-items: center;
+    justify-content:center;
+    gap: 10px;
     display: flex;
+    box-sizing: border-box;
+    margin-inline-end: 40px;
+    margin-inline-start: 40px;
+
+  }
+  
+  .package div {
+    font-family: 'Inter', sans-serif;
+    background-color: #FF544A;
+    height: 100%;
+    width: 100%;
+    border-radius: 24px;
+    justify-content: center;
+    padding-top: 0px;
+  }
+  
+}
+
+
+
+@media (max-width: 768px) {
+  .sign-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 23.87px;
+    width: 50%;
+    height: 90%;
+    background-color: #FFFEFC;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+  }
+
+  .sign-form h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #24205D;
+    margin-top: 36x;
+    margin-bottom: 44px;
+  }
+
+  .sign-page {
+    padding: 0px;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    background-color: #0758E8;
+}
+
+  .sign-form .input {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .sign-form .input input {
+    flex: 1;
+    border-radius: 10px;
+    font-size: 12px;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 200px;
+    height: 40px;
+  }
+
+  .dropdown {
+    position: relative;
+    width: 200px;
+    margin-top: 20px;
+  }
+
+  .sign-page .logo {
+    width: 94.10px;
+    height: 56px;
+  }
+
+  .dropdown-button {
+    font-size: 12px;
+    width: 100%;
+    height: 26px;
+  }
+
+  .dropdown-menu {
+    width: 200px;
+  }
+
+  .sign-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .package {
+    font-family: 'Inter', sans-serif;
+    width: 200px;
+    flex-direction: column;
+    margin: 2%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    display: flex;
+    box-sizing: border-box;
+  }
+
+  .package h1 {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-top: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+    font-weight: bolder;
+  }
+
+  .package-content p {
+    font-size: 10px;
+  }
+
+  .package-content ul {
+    font-size: 8px;
+  }
+
+  .sign-button {
+    width: 200px;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
   }
 
   .welcome-section {
@@ -410,7 +628,6 @@ width: 245px;
   }
 }
 
-
 /*---------------------------------SignIn---------------------------------*/
 /*---------------------------------Login---------------------------------*/
 .sign-form h3 {
@@ -420,34 +637,37 @@ width: 245px;
   color: #24205D;
   margin-top: 40px;
 }
-.sign-form .login-input input{
+
+.sign-form .login-input input {
   height: 50px;
-  width:400px;
+  width: 400px;
   border-radius: 10px;
   padding: 16px;
   font-size: 16px;
 }
-@media (max-width: 1100px){
-  .sign-form .login-input input{
+
+@media (max-width: 1100px) {
+  .sign-form .login-input input {
     height: 50px;
-    width:100%;
+    width: 100%;
     border-radius: 10px;
     padding: 16px;
     font-size: 16px;
   }
-  
+
 }
+
 .sign-form .login-input {
   display: flex;
-  flex-direction: column;  
-  align-items: center;     
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
   margin-top: 30px;
-  margin-bottom: 20px;  
-  gap: 40px;            
+  margin-bottom: 20px;
+  gap: 40px;
   box-sizing: border-box;
-  
-  
+
+
 }
 
 .sign-form .login-input p {
@@ -460,16 +680,31 @@ width: 245px;
   position: relative;
   transition: top 0.3s, font-size 0.3s;
 }
+.password-container {
+  position: relative;
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+}
+
 
 .question {
-  font-size: 14px;
+  font-size: 12px;
   color: #24205D;
-  margin-top: 20px;
+  margin-top: -25px;
   margin-bottom: 40px;
 }
 
 .question a {
-  color: #0758E8;
+  color: #24205D;
   text-decoration: none;
   font-weight: bold;
 }
@@ -489,7 +724,9 @@ width: 245px;
   border: none;
   padding: 10px 20px;
   box-sizing: border-box;
+  margin-bottom: 50px;
 }
+
 .login-button:hover {
   background: #00b342;
 }

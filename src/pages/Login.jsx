@@ -4,21 +4,25 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
+
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/login', {
-        username,
+      const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/login', {
+        storeName,
         password
       });
-
+  
+      console.log('Login response:', response.data); // Yanıtı kontrol edin
+  
       if (response.data.success) {
-        // Başarıyla giriş yaptıktan sonra yönlendirme yap
-        navigate('/dashboard');
+        navigate('/profile');
       } else {
         alert('Invalid credentials');
       }
@@ -28,9 +32,14 @@ const Login = () => {
     }
   };
 
+  
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <div className='background'>
-      <img className="img" src="/images/SignupBackground.png" />
+      <img className="img" src="/images/SignupBackground.png" alt="Welcome" />
 
       <div className="sign-page">
         <Link to="/">
@@ -38,37 +47,37 @@ const Login = () => {
         </Link>
 
         <div className="welcome-section">
-          <h1>Welcome to EticPlus</h1>
-          <p>Continue your mobile journey with us!</p>
-          <img src="/images/eticlogin.png" alt="Etic PLUS Logo" />
+          <img src="/images/welcomeback.png" alt="Welcome Back" />
         </div>
 
         <form onSubmit={handleLogin} className="sign-form">
-          <h3>Login</h3>
+          <h3>Sign In</h3>
           <div className='login-input'>
             <div>
               <p>Store Name</p>
               <input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                
+                value={storeName}
+                onChange={(e) => setStoreName(e.target.value)}
+                placeholder='Enter your store name'
               />
             </div>
 
-            <div>
+            <div className='password-container'>
               <p>Password</p>
               <input
-                type="password"
+                type={passwordVisible ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder='Enter your password'
               />
+              <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
+                {passwordVisible ? 'Hide' : 'Show'}
+              </button>
             </div>
           </div>
-
-
-          <p className='question'>Don't have an account?<a href="/signup">  Sign up!</a></p>
-          <button className='login-button' type="submit">Login</button>
+          <button className='login-button' type="submit">Sign In</button>
+          <p className='question'>Don't have an account?<Link to="/signup">  Sign up!</Link></p>
         </form>
       </div>
     </div>

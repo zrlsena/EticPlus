@@ -7,40 +7,34 @@ import { packageData } from '../components/PackageData';
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [category, setCategory] = useState('');
   const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [storeError, setStoreError] = useState('');
+  const [categoryError, setCategoryError] = useState('');
   const [packageError, setPackageError] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownFontSize, setDropdownFontSize] = useState(16);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const dropdownButtonRef = useRef(null);
   const dropdownMenuRef = useRef(null);
   const navigate = useNavigate();
 
+
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
 
-  const stores = ['General Store', 'Brand Store', 'Boutique Store', 'Crafts and Hobby Store', 'Food and Beverage Store', 'Cosmetics and Personal Care Store', 'Electronics Store', 'Home and Garden Store', 'Sports and Outdoor Store', 'Books and Music Store', 'Kids and Baby Store', 'Category-Specific Store'];
-  /*
-  
+
   useEffect(() => {
-    axios.get(apiUrl)
-      .then(response => {
-        setStoreName(response.data.storeName);
-        setPassword(response.data.password);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/categories`);
+        setCategories(response.data); // response.data'nın [{ id, name }] formatında olduğunu varsayıyoruz
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
   }, []);
-  
-  */
-  useEffect(() => {
-    if (category.length > 25) {
-      setDropdownFontSize(10);
-    } else {
-      setDropdownFontSize(16);
-    }
-  }, [category]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -72,7 +66,7 @@ const SignUp = () => {
         },
         body: JSON.stringify({
           storeName,
-          category,
+          category: selectedCategory,
           password,
           packageType,
         }),
@@ -93,11 +87,11 @@ const SignUp = () => {
 
 
 
-  const validateForm = () => {
+  const validateForm =async () => {
     let isValid = true;
     setStoreNameError('');
     setPasswordError('');
-    setStoreError('');
+    setCategoryError('');
     setPackageError('');
 
     if (storeName.length < 3 || storeName.length > 20) {
@@ -119,14 +113,28 @@ const SignUp = () => {
       setPasswordError('Password must not contain spaces.');
     }
 
-    if (category === '') {
-      setStoreError('Please select a store.');
+    if (!selectedCategory) { // selectedCategory olarak güncellendi
+      setCategoryError('Please select a store.');
       isValid = false;
     }
 
     if (!packageType) {
       setPackageError('Please select a package.');
       isValid = false;
+    }
+
+    if (isValid) {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/check-store-name?storeName=${storeName}`);
+        if (response.data.exists) {
+          setStoreNameError('Store name is already taken.');
+          isValid = false;
+        }
+      } catch (error) {
+        console.error('Error checking store name:', error);
+        setStoreNameError('This store name already exist.');
+        isValid = false;
+      }
     }
 
     return isValid;
@@ -152,8 +160,8 @@ const SignUp = () => {
     }
   };
 
-  const handleStoreSelect = (store) => {
-    setCategory(store);
+  const handleCategorySelect = (categoryName) => {
+    setSelectedCategory(categoryName); // seçilen kategori adı
     setIsDropdownOpen(false);
   };
 
@@ -161,7 +169,7 @@ const SignUp = () => {
 
     const postData = {
       storeName,
-      category,
+      category: selectedCategory, 
       password,
       packageType
     };
@@ -169,6 +177,7 @@ const SignUp = () => {
       .then(response => console.log('Data updated successfully:', response.data))
       .catch(error => console.error('Error posting data:', error));
   };
+  
 
   return (
     <div className='background'>
@@ -212,35 +221,36 @@ const SignUp = () => {
               />
               {passwordError && <p className="error">{passwordError}</p>}
             </div>
-            </div>
-            <div className="dropdown" ref={dropdownMenuRef}>
-              <p>Type of Store</p>
-              <button type="button" onClick={toggleDropdown} className={`dropdown-button ${isDropdownOpen ? 'open' : ''}`} 
- ref={dropdownButtonRef}
-                style={{ fontSize: `${dropdownFontSize}px` }}>
-                {category || 'Select a store'}
-                <img src="/images/dropdown.png" alt="dropdown" />
-              </button>
-              {!isDropdownOpen && storeError && <p className="error">{storeError}</p>}
-              {isDropdownOpen && (
-                <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
-                  {stores.map((store, index) => (
-                    <li key={index} onClick={() => handleStoreSelect(store)}>
-                      {store}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              
-            
           </div>
+
+          <div className="dropdown">
+            <p>Type of Store</p>
+            <button type="button" onClick={toggleDropdown} className={`dropdown-button ${isDropdownOpen ? 'open' : ''}`}
+              ref={dropdownButtonRef}
+              >
+              {selectedCategory || 'Select a store category'}
+              <img src="/images/dropdown.png" alt="dropdown" />
+            </button>
+            {!isDropdownOpen && categoryError && <p className="error">{categoryError}</p>}
+            {isDropdownOpen && (
+              <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
+                {categories.map((item, index) => ( // category yerine categories kullanın
+                  <li key={index} onClick={() => handleCategorySelect(item.name)}>
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+
           <div className='package-h2'>
             <h2 >Choose Your Plan</h2>
-            
+
           </div>
           <div className='package'>
             {packageData.map(pkg => (
-              <div key={pkg.value} >
+              <div className='wrapper' key={pkg.value}  >
                 <label >
                   <input
                     type="radio"
@@ -262,7 +272,7 @@ const SignUp = () => {
                         </li>
                       ))}
                     </ul>
-                    
+
                   </div>
                 </label>
               </div>
@@ -276,6 +286,7 @@ const SignUp = () => {
           >
             Sign Up
           </button>
+          <p className='question'>Already have a store? <a href="/login">  Login.</a></p>
         </form>
       </div>
     </div>
