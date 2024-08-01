@@ -8,11 +8,12 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^3.0.1",
     "react-toastify": "^10.0.5",
     "web-vitals": "^2.1.4"
   },
@@ -39,5 +40,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "author": "sena zorlu",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "eticPlus"
+  },
+  "keywords": []
 }
