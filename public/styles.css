@@ -397,17 +397,84 @@ a {
   margin-left: -10px;
 }
 
-/*
-@media (min-width: 1800px) {
-  .background{
-    background-color: #000000;
+
+@media (min-width: 340px) and (max-width: 767px) {
+  .sign-page {
+    position: absolute;
+    width: 300px;
+    height: 100vh;
+    margin-top: 100px;
+    margin-bottom: 10px;
+    background-color: #0758E8;
+    display: flex;
+    border-radius: 23.87px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .background {
+    background-color: #F9F1E3;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sign-page .logo {
+    left: 4%;
+    top: -2px;
+    position: absolute;
+    height: 35px;
+    width: 56px;
+    margin-bottom: 4px;
+  }
+
+  .sign-form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 23.87px;
+    width: 280px !important;
+    height: 100vh;
+    margin-top: 10px; 
+    background-color: #FFFEFC;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .sign-form .input input {
+    flex: 1;
+    border-radius: 10px;
+    font-size: 12px;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 150px;
+    height: 40px;
+  }
+
+  .dropdown {
+    width: 150px;
+    margin-top: 20px;
+  }
+  .dropdown-menu {
+    position: relative;
+    width: 150px;
+    height: 40px;
+
+  }
+  .dropdown-button {
+    font-size: 12px;
+    width: 100%;
+    height: 26px;
   }
 }
-@media (min-width: 992px) and (max-width: 1300px) {
-  .background{
-    background-color: red;
-  }
-}*/
+
 
 @media (max-width: 1200px) {
   .sign-form {

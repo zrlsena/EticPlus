@@ -106,14 +106,12 @@ const SignUp = () => {
     if (!/[A-Z]/.test(password)) {
       setPasswordError('Password must contain at least one uppercase letter.');
     }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      setPasswordError('Password must contain at least one punctuation mark.');
-    }
+   
     if (/\s/.test(password)) {
       setPasswordError('Password must not contain spaces.');
     }
 
-    if (!selectedCategory) { // selectedCategory olarak güncellendi
+    if (!selectedCategory) { 
       setCategoryError('Please select a store.');
       isValid = false;
     }
@@ -161,23 +159,11 @@ const SignUp = () => {
   };
 
   const handleCategorySelect = (categoryName) => {
-    setSelectedCategory(categoryName); // seçilen kategori adı
+    setSelectedCategory(categoryName);
     setIsDropdownOpen(false);
   };
 
-  const handleUpdate = () => {
-
-    const postData = {
-      storeName,
-      category: selectedCategory, 
-      password,
-      packageType
-    };
-    axios.post(apiUrl, postData)
-      .then(response => console.log('Data updated successfully:', response.data))
-      .catch(error => console.error('Error posting data:', error));
-  };
-  
+ 
 
   return (
     <div className='background'>
@@ -282,7 +268,6 @@ const SignUp = () => {
           <button
             type="submit"
             className='sign-button'
-            onClick={handleUpdate}
           >
             Sign Up
           </button>

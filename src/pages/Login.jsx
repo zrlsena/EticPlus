@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
 
 const Login = () => {
   const [storeName, setStoreName] = useState('');
@@ -9,30 +8,34 @@ const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      console.log('Sending login request with:', { storeName, password });
       const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/login', {
         storeName,
         password
       });
-  
-      console.log('Login response:', response.data); // Yanıtı kontrol edin
-  
+
+      console.log('Login response:', response.data);
+
       if (response.data.success) {
-        navigate('/profile');
+        localStorage.setItem('token', response.data.token);
+        navigate('/profile'); // Ensure '/profile' route exists
       } else {
         alert('Invalid credentials');
       }
     } catch (error) {
       console.error('Error during login:', error);
-      alert('An error occurred during login.');
+      if (error.response && error.response.data) {
+        // Show specific error message from server
+        alert(`Login failed: ${error.response.data.message || 'An error occurred during login.'}`);
+      } else {
+        alert('An error occurred during login.');
+      }
     }
   };
 
-  
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
