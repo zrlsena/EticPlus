@@ -190,7 +190,7 @@ const SignUp = () => {
                       isInvalid={!!passwordError}
                       className="custom-placeholder"
                     />
-                    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
+                    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button " style={{paddingRight: passwordError ? '25px' : '0'}}>
                       <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
                     </button>
                   </div>

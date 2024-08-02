@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Form } from 'react-bootstrap'; // Form bileşenini içe aktardık
-import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap CSS
+import { Form } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,14 +27,13 @@ const Login = () => {
 
       if (response.data.success) {
         localStorage.setItem('token', response.data.token);
-        navigate('/profile'); // Ensure '/profile' route exists
+        navigate('/profile'); // Ensure '/home' route exists
       } else {
         alert('Invalid credentials');
       }
     } catch (error) {
       console.error('Error during login:', error);
       if (error.response && error.response.data) {
-        // Show specific error message from server
         alert(`Login failed: ${error.response.data.message || 'An error occurred during login.'}`);
       } else {
         alert('An error occurred during login.');
@@ -96,7 +95,7 @@ const Login = () => {
               </Form.Control.Feedback>
             </div>
 
-            <button className="mt-5 btn btn-primary w-100 mb-3 " style={{ backgroundColor:'#17CC82' }} type="submit">
+            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor:'#17CC82' }} type="submit">
               Sign In
             </button>
 
