@@ -3,26 +3,27 @@ import { Link, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const location = useLocation();
-  const isSignInPage = location.pathname === '/signup';
+  const isSignInPage = location.pathname === '/signin'; // veya başka bir sayfa kontrolü
 
   return (
-    <header className={isSignInPage ? 'navbar-sign' : 'navbar'}>
-      <div className="logo">
-        <Link to="/">
-          <img src="/images/eticLogo.png" alt="Etic PLUS Logo" />
-        </Link>
-      </div>
+    <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="#">
+        <img style={{ marginLeft:'20px', width: '60px' }} className="rounded-pill" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
+        </a>
 
-      {!isSignInPage && (
-        <ul className="links">
-          <li><a href="/profile">Profile</a></li>
+        <ul class="navbar-nav">
+        <li class="nav-item">
+        <a class="nav-link" href="/profile">Profile</a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" href="/login" >Login</a>
+      </li>
+
         </ul>
-      )}
-
-      {!isSignInPage && (
-        <a href="/login" className="action-btn">Login</a>
-      )}
-    </header>
+       
+      </div>
+    </nav>
   );
 }
 

@@ -1,27 +1,27 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config';
 import axios from 'axios';
 import { packageData } from '../components/PackageData';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [categoryError, setCategoryError] = useState('');
   const [packageError, setPackageError] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const dropdownButtonRef = useRef(null);
-  const dropdownMenuRef = useRef(null);
   const navigate = useNavigate();
 
-
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -34,20 +34,6 @@ const SignUp = () => {
     };
 
     fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target) && !dropdownButtonRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
   }, []);
 
   const handleSignIn = async (e) => {
@@ -85,33 +71,35 @@ const SignUp = () => {
     }
   };
 
-
-
-  const validateForm =async () => {
+  const validateForm = async () => {
     let isValid = true;
     setStoreNameError('');
     setPasswordError('');
     setCategoryError('');
     setPackageError('');
 
+    const passwordCriteria = [
+      { regex: /.{4,15}/, message: 'Password must be between 4 and 15 characters.' },
+      { regex: /[A-Z]/, message: 'Password must contain at least one uppercase letter.' },
+      { regex: /[a-z]/, message: 'Password must contain at least one lowercase letter.' },
+      { regex: /\d/, message: 'Password must contain at least one digit.' },
+      { regex: /^[^ğüşıöçĞÜŞİÖÇ]+$/, message: 'Password must not contain Turkish characters.' },
+    ];
+
     if (storeName.length < 3 || storeName.length > 20) {
       setStoreNameError('StoreName must be between 3 and 20 characters.');
       isValid = false;
     }
 
-    if (password.length < 4 || password.length > 15) {
-      setPasswordError('Password must be between 4 and 15 characters.');
-      isValid = false;
-    }
-    if (!/[A-Z]/.test(password)) {
-      setPasswordError('Password must contain at least one uppercase letter.');
-    }
-   
-    if (/\s/.test(password)) {
-      setPasswordError('Password must not contain spaces.');
+    for (const criterion of passwordCriteria) {
+      if (!criterion.regex.test(password)) {
+        setPasswordError(criterion.message);
+        isValid = false;
+        break;
+      }
     }
 
-    if (!selectedCategory) { 
+    if (!selectedCategory) {
       setCategoryError('Please select a store.');
       isValid = false;
     }
@@ -138,142 +126,143 @@ const SignUp = () => {
     return isValid;
   };
 
-
-  const toggleDropdown = () => {
-    if (isDropdownOpen) {
-      if (dropdownMenuRef.current) {
-        dropdownMenuRef.current.classList.add('closed');
-        dropdownMenuRef.current.classList.remove('open');
-      }
-      setTimeout(() => {
-        setIsDropdownOpen(false);
-      }, 500);
-    } else {
-      setIsDropdownOpen(true);
-      setTimeout(() => {
-        if (dropdownMenuRef.current) {
-          dropdownMenuRef.current.classList.add('open');
-        }
-      }, 0);
-    }
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
-
-  const handleCategorySelect = (categoryName) => {
-    setSelectedCategory(categoryName);
-    setIsDropdownOpen(false);
-  };
-
- 
 
   return (
-    <div className='background'>
-      <img className="img" src="/images/SignupBackground.png" alt="Welcome" />
+    <div className="background">
+      <Container className="container d-flex align-items-center justify-content-center">
+        <div className="sign-page">
+          <Link to="/">
+            <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
+          </Link>
 
-      <div className="sign-page">
-        <Link to="/">
-          <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
-        </Link>
-
-        <div className="welcome-section">
-          <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
-        </div>
-
-        <form onSubmit={handleSignIn} className="sign-form">
-          <h1>Sign Up</h1>
-
-          <div className='input'>
-            <div >
-              <p>Store Name</p>
-              <input
-                type="text"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
-                minLength="3"
-                maxLength="20"
-                placeholder='Between 3 and 20 characters'
-              />
-              {storeNameError && <p className="error">{storeNameError}</p>}
-            </div>
-
-            <div>
-              <p>Password</p>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength="4"
-                maxLength="15"
-                placeholder='Create strong password'
-              />
-              {passwordError && <p className="error">{passwordError}</p>}
-            </div>
+          <div className="welcome-section">
+            <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
           </div>
 
-          <div className="dropdown">
-            <p>Type of Store</p>
-            <button type="button" onClick={toggleDropdown} className={`dropdown-button ${isDropdownOpen ? 'open' : ''}`}
-              ref={dropdownButtonRef}
-              >
-              {selectedCategory || 'Select a store category'}
-              <img src="/images/dropdown.png" alt="dropdown" />
-            </button>
-            {!isDropdownOpen && categoryError && <p className="error">{categoryError}</p>}
-            {isDropdownOpen && (
-              <ul className={`dropdown-menu`} ref={dropdownMenuRef}>
-                {categories.map((item, index) => ( // category yerine categories kullanın
-                  <li key={index} onClick={() => handleCategorySelect(item.name)}>
-                    {item.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <Form onSubmit={handleSignIn} className="sign-form bg-light p-4 rounded">
+            <h1 className="mb-1 text-center fs-2">Sign Up</h1>
 
-
-          <div className='package-h2'>
-            <h2 >Choose Your Plan</h2>
-
-          </div>
-          <div className='package'>
-            {packageData.map(pkg => (
-              <div className='wrapper' key={pkg.value}  >
-                <label >
-                  <input
-                    type="radio"
-                    value={pkg.value}
-                    checked={packageType === pkg.value}
-                    onChange={(e) => setPackageType(e.target.value)}
-                    className="package-radio"
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group controlId="formStoreName">
+                  <Form.Label className='input-title'>Store Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={storeName}
+                    onChange={(e) => setStoreName(e.target.value)}
+                    minLength="3"
+                    maxLength="20"
+                    placeholder="Between 3 and 20 characters"
+                    isInvalid={!!storeNameError}
+                    className="custom-placeholder"
                   />
-                  <div className="package-content">
-                    <h1>{pkg.title}</h1>
-                    <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
-                    <ul>
-                      {pkg.list && pkg.list.map((item, index) => (
-                        <li key={index}>
-                          {item}
-                          {pkg.value === 'PLATINUM' && (
-                            <span> ✔</span> // Platinum paketine özel tik işareti
-                          )}
-                        </li>
-                      ))}
-                    </ul>
+                  <Form.Control.Feedback type="invalid">
+                    {storeNameError}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
 
+              <Col md={6}>
+                <Form.Group controlId="formPassword">
+                  <Form.Label className='input-title'>Password</Form.Label>
+                  <div className="password-container">
+                  <Form.Control
+                    type={passwordVisible ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    minLength="4"
+                    maxLength="15"
+                    placeholder="Create strong password"
+                    isInvalid={!!passwordError}
+                    className="custom-placeholder"
+                  />
+                  <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
+                    <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                  </button>
                   </div>
-                </label>
-              </div>
-            ))}
-          </div>
+                  <Form.Control.Feedback type="invalid">
+                    {passwordError}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
 
-          <button
-            type="submit"
-            className='sign-button'
-          >
-            Sign Up
-          </button>
-          <p className='question'>Already have a store? <a href="/login">  Login.</a></p>
-        </form>
-      </div>
+            <Form.Group className="mb-3">
+              <Form.Label className='input-title'>Store Category</Form.Label>
+              <Form.Control
+                as="select"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                isInvalid={!!categoryError}
+                className="custom-placeholder"
+              >
+                <option value="">Select a store category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {categoryError}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
+
+            <Row className="mb-4">
+              {packageData.map(pkg => (
+                <Col md={4} key={pkg.value}>
+                  <div
+                    className={`package-card p-3 border rounded ${packageType === pkg.value ? 'selected' : ''}`}
+                    onClick={() => setPackageType(pkg.value)}
+                  >
+                    <Form.Check
+                      type="radio"
+                      value={pkg.value}
+                      checked={packageType === pkg.value}
+                      onChange={(e) => setPackageType(e.target.value)}
+                      id={pkg.value}
+                      name="package"
+                    >
+                      <Form.Check.Input type="radio" className="d-none" />
+                      <Form.Check.Label>
+                        <div className="package-content">
+                          <h3>{pkg.title}</h3>
+                          <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
+                          <ul>
+                            {pkg.list && pkg.list.map((item, index) => (
+                              <li key={index}>
+                                {item}
+                                {pkg.value === 'PLATINUM' && (
+                                  <span className="text-success fw-bold text-end">✔</span>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Form.Check.Label>
+                    </Form.Check>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+
+            <Button
+              type="submit"
+              className="btn btn-primary w-100 mb-3 bg-success"
+            >
+              Sign Up
+            </Button>
+            <p className="text-center">
+              Already have a store? <Link to="/login">Login</Link>.
+            </p>
+          </Form>
+        </div>
+      </Container>
     </div>
   );
 };

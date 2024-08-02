@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Form } from 'react-bootstrap'; // Form bileşenini içe aktardık
+import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap CSS
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [storeNameError, setStoreNameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -41,47 +47,64 @@ const Login = () => {
   };
 
   return (
-    <div className='background'>
-      <img className="img" src="/images/SignupBackground.png" alt="Welcome" />
+    <div className="background">
+      <div className="container d-flex align-items-center justify-content-center">
+        <div className="sign-page">
+          <Link to="/">
+            <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
+          </Link>
 
-      <div className="sign-page">
-        <Link to="/">
-          <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
-        </Link>
+          <div className="welcome-section">
+            <img src="/images/welcomeback.png" alt="Welcome Back" />
+          </div>
 
-        <div className="welcome-section">
-          <img src="/images/welcomeback.png" alt="Welcome Back" />
-        </div>
+          <form onSubmit={handleLogin} className="sign-form bg-light p-4 rounded">
+            <h1 className="text-center mb-4 fs-2">Sign In</h1>
 
-        <form onSubmit={handleLogin} className="sign-form">
-          <h3>Sign In</h3>
-          <div className='login-input'>
-            <div>
-              <p>Store Name</p>
-              <input
+            <div className="form-group mb-3">
+              <Form.Label className="input-title">Store Name</Form.Label>
+              <Form.Control
                 type="text"
                 value={storeName}
                 onChange={(e) => setStoreName(e.target.value)}
-                placeholder='Enter your store name'
+                placeholder="Enter your store name"
+                isInvalid={!!storeNameError}
+                className="custom-placeholder"
               />
+              <Form.Control.Feedback type="invalid" className="d-block">
+                {storeNameError}
+              </Form.Control.Feedback>
             </div>
 
-            <div className='password-container'>
-              <p>Password</p>
-              <input
-                type={passwordVisible ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder='Enter your password'
-              />
-              <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
-                {passwordVisible ? 'Hide' : 'Show'}
-              </button>
+            <div className="form-group mb-3">
+              <Form.Label className="input-title">Password</Form.Label>
+              <div className="password-container">
+                <Form.Control
+                  type={passwordVisible ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  isInvalid={!!passwordError}
+                  className="custom-placeholder"
+                />
+                <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
+                  <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                </button>
+              </div>
+              <Form.Control.Feedback type="invalid" className="d-block">
+                {passwordError}
+              </Form.Control.Feedback>
             </div>
-          </div>
-          <button className='login-button' type="submit">Sign In</button>
-          <p className='question'>Don't have an account?<Link to="/signup">  Sign up!</Link></p>
-        </form>
+
+            <button className="btn btn-primary w-100 mb-3 bg-success" type="submit">
+              Sign In
+            </button>
+
+            <p className="text-center">
+              Don't have an account? <Link to="/signup">Sign up!</Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
