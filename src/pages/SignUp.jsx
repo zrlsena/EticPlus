@@ -4,7 +4,7 @@ import API_BASE_URL from '../config';
 import axios from 'axios';
 import { packageData } from '../components/PackageData';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -19,6 +19,7 @@ const SignUp = () => {
   const [packageError, setPackageError] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
 
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
@@ -63,9 +64,14 @@ const SignUp = () => {
       }
 
       const data = await response.json();
-
       console.log('Sign Up successful:', data);
-      navigate('/login'); // Başarılı girişten sonra yönlendirme
+      setShowSuccessModal(true);
+
+      setTimeout(() => {
+        setShowSuccessModal(false);
+        navigate('/login');
+      }, 2000);
+
     } catch (error) {
       console.error('An error occurred:', error);
     }
@@ -130,6 +136,11 @@ const SignUp = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  const handleModalClose = () => {
+    setShowSuccessModal(false);
+    navigate('/login'); // Navigate to login after closing the modal
+  };
+
   return (
     <div className="background">
       <Container className="container d-flex align-items-center justify-content-center">
@@ -145,7 +156,7 @@ const SignUp = () => {
           <Form onSubmit={handleSignIn} className="sign-form bg-light p-4 rounded">
             <h1 className="mb-1 text-center fs-2">Sign Up</h1>
 
-            <Row className="mb-3">
+            <Row className="mb-0">
               <Col md={6}>
                 <Form.Group controlId="formStoreName">
                   <Form.Label className='input-title'>Store Name</Form.Label>
@@ -169,19 +180,19 @@ const SignUp = () => {
                 <Form.Group controlId="formPassword">
                   <Form.Label className='input-title'>Password</Form.Label>
                   <div className="password-container">
-                  <Form.Control
-                    type={passwordVisible ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    minLength="4"
-                    maxLength="15"
-                    placeholder="Create strong password"
-                    isInvalid={!!passwordError}
-                    className="custom-placeholder"
-                  />
-                  <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
-                    <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-                  </button>
+                    <Form.Control
+                      type={passwordVisible ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      minLength="4"
+                      maxLength="15"
+                      placeholder="Create strong password"
+                      isInvalid={!!passwordError}
+                      className="custom-placeholder"
+                    />
+                    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
+                      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                    </button>
                   </div>
                   <Form.Control.Feedback type="invalid">
                     {passwordError}
@@ -190,7 +201,7 @@ const SignUp = () => {
               </Col>
             </Row>
 
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4 ">
               <Form.Label className='input-title'>Store Category</Form.Label>
               <Form.Control
                 as="select"
@@ -198,6 +209,7 @@ const SignUp = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 isInvalid={!!categoryError}
                 className="custom-placeholder"
+                style={{ fontSize: '0.9rem', height: '2.5rem'}}
               >
                 <option value="">Select a store category</option>
                 {categories.map((category) => (
@@ -211,16 +223,17 @@ const SignUp = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
+
             <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
 
             <Row className="mb-4">
               {packageData.map(pkg => (
                 <Col md={4} key={pkg.value}>
                   <div
-                    className={`package-card p-3 border rounded ${packageType === pkg.value ? 'selected' : ''}`}
+                    className={`package-card p-3 border rounded-5 ${packageType === pkg.value ? 'selected' : ''}`}
                     onClick={() => setPackageType(pkg.value)}
                   >
-                    <Form.Check
+                    <Form.Check 
                       type="radio"
                       value={pkg.value}
                       checked={packageType === pkg.value}
@@ -251,16 +264,27 @@ const SignUp = () => {
               ))}
             </Row>
 
-            <Button
+            <Button 
+              style={{ backgroundColor:'#17CC82' }}
               type="submit"
-              className="btn btn-primary w-100 mb-3 bg-success"
+              className="btn btn-primary w-100 mb-3 "
             >
               Sign Up
-            </Button>
+            </Button >
             <p className="text-center">
               Already have a store? <Link to="/login">Login</Link>.
             </p>
           </Form>
+
+          <Modal show={showSuccessModal} onHide={handleModalClose} class="modal-dialog modal-fullscreen" >
+            <Modal.Header closeButton style={{ backgroundColor:'#17CC82' }} >
+              <Modal.Title >Success!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              You have successfully signed up.
+            </Modal.Body>
+          </Modal>
+
         </div>
       </Container>
     </div>

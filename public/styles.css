@@ -479,11 +479,6 @@ a {
     height: 40px;
   }
 
-  .dropdown {
-    position: relative;
-    width: 200px;
-    margin-top: 20px;
-  }
 
   .sign-page .logo {
     width: 94.10px;
@@ -497,7 +492,16 @@ a {
   }
 
   .dropdown-menu {
-    width: 200px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 500px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-top: 0px;
+    height: 0px;
+    overflow-y: auto;
+    transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 1;
   }
 
   .sign-form input {
