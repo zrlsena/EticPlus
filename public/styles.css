@@ -84,8 +84,8 @@ a {
   position: relative;
   background-color: #0758E8;
   border-radius: 24px;
-  padding: 20px;
-  width: 100%;
+  padding: 20px ;
+  width: 90%;
   box-sizing: border-box;
   height: 95%;
   display: flex;
@@ -94,6 +94,8 @@ a {
   margin: auto;
   position: relative;
   grid-template-columns: 1fr 1fr;
+  min-height: 670px;
+  margin-top: 10px;
 }
 
 .sign-form {
@@ -105,7 +107,6 @@ a {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   flex: 2;
   overflow: auto;
-
 }
 
 .welcome-section {
@@ -125,7 +126,13 @@ a {
   width: 100%;
 }
 .custom-placeholder::placeholder {
-  font-size: 0.9rem; /* Placeholder metninin boyutunu değiştirir */
+  font-size: 0.9rem; 
+}
+.custom-label {
+  font-size: 1rem;
+  margin-left: 10px;
+  margin-bottom: -10px;
+
 }
 .sign-button {
   width: 100%;
@@ -177,7 +184,6 @@ a {
   margin-right: 20px;
   margin-left: -10px;
 }
-
 
 .dropdown-menu {
   position: absolute;

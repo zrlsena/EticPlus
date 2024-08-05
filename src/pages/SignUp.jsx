@@ -24,6 +24,8 @@ const SignUp = () => {
 
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
 
+
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -121,6 +123,8 @@ const SignUp = () => {
         if (response.data.exists) {
           setStoreNameError('Store name is already taken.');
           isValid = false;
+        }else {
+          setStoreNameError(''); 
         }
       } catch (error) {
         console.error('Error checking store name:', error);
@@ -154,7 +158,7 @@ const SignUp = () => {
           </div>
 
           <Form onSubmit={handleSignIn} className="sign-form bg-light p-4 rounded">
-            <h1 className="mb-1 text-center fs-2">Sign Up</h1>
+            <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px' }}>Sign Up</h1>
 
             <Row className="mb-0">
               <Col md={6}>
@@ -265,7 +269,7 @@ const SignUp = () => {
             </Row>
 
             <Button 
-              style={{ backgroundColor:'#17CC82' }}
+              style={{ backgroundColor:'#17CC82',borderColor:'transparent' }}
               type="submit"
               className="btn btn-primary w-100 mb-3 "
             >

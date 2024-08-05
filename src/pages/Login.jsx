@@ -14,31 +14,28 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  async function login(storeName, password) {
     try {
-      console.log('Sending login request with:', { storeName, password });
       const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/login', {
-        storeName,
-        password
+        storeName: storeName,
+        password: password
       });
 
-      console.log('Login response:', response.data);
-
-      if (response.data.success) {
-        localStorage.setItem('token', response.data.token);
-        navigate('/profile'); // Ensure '/home' route exists
-      } else {
-        alert('Invalid credentials');
+      // Giriş başarılı ise token'ı sakla ve profile sayfasına yönlendir
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem('jwtToken', token); // Token'ı localStorage'da sakla
+        navigate('/home'); // Profile sayfasına yönlendir
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      if (error.response && error.response.data) {
-        alert(`Login failed: ${error.response.data.message || 'An error occurred during login.'}`);
-      } else {
-        alert('An error occurred during login.');
-      }
+      console.error('Login failed:', error.response.data);
+      alert('Login failed. Please check your credentials and try again.');
     }
+  }
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    login(storeName, password);
   };
 
   const togglePasswordVisibility = () => {
@@ -58,7 +55,7 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleLogin} className="sign-form bg-light p-4 rounded">
-            <h1 className="text-center mb-4 fs-2">Sign In</h1>
+            <h1 className="text-center mb-4 fs-2" style={{ marginTop: '20px' }}>Sign In</h1>
 
             <div className="form-group mb-3">
               <Form.Label className="input-title">Store Name</Form.Label>
@@ -95,7 +92,7 @@ const Login = () => {
               </Form.Control.Feedback>
             </div>
 
-            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor:'#17CC82' }} type="submit">
+            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor:'#17CC82',borderColor:'transparent' }} type="submit">
               Sign In
             </button>
 

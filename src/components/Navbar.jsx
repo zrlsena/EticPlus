@@ -1,15 +1,12 @@
 import React from "react";
-import { Link, useLocation } from 'react-router-dom';
 
 function Navbar() {
-  const location = useLocation();
-  const isSignInPage = location.pathname === '/signin'; // veya başka bir sayfa kontrolü
 
   return (
-    <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+    <nav className="navbar navbar-expand-sm bg-light navbar-light">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-        <img style={{ marginLeft:'20px', width: '60px' }} className="rounded-pill" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
+        <a className="navbar-brand" href="/home">
+        <img style={{ marginLeft:'20px', width: '80px' }} className="rounded-pill" src="/images/blueLogo.png" alt="Etic PLUS Logo" />
         </a>
 
         <ul class="navbar-nav">
