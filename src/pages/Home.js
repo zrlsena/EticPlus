@@ -1,43 +1,113 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 
 function Home() {
+  const [plugins, setPlugins] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   async function getHomePage() {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-      alert('User not authenticated. Please login.');
-      navigate('/login'); // Eğer token yoksa giriş sayfasına yönlendir
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      navigate('/login');
       return;
     }
+
     try {
-      const response = await axios.get('https://bilir-d108588758e4.herokuapp.com/api/home', {
+      const response = await fetch(`${API_BASE_URL}/api/home`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${jwt}`,
         }
       });
-      if (response.status === 200) {
-        const plugins = response.data;
-        console.log('User plugins:', plugins);
-        // Plugin verilerini sayfada göster
+
+      if (response.ok) {
+        const data = await response.json();
+        setPlugins(data);
+      } else {
+        const errorData = await response.json();
+        console.error('Error:', errorData);
+        navigate('/login');
       }
     } catch (error) {
-      console.error('Error retrieving home page:', error.response.data);
-      alert('Error retrieving home page. Please try again.');
+      console.error('Error retrieving home page:', error);
+      navigate('/login');
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    getHomePage();
-  }, []);
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      getHomePage();
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  const updatePluginStatus = async (pluginId, isActive) => {
+    const jwt = localStorage.getItem('jwt');
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/togglePlugin`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ id: pluginId, isActive })
+      });
+
+      if (response.ok) {
+        const updatedPlugin = await response.json();
+        setPlugins(prevPlugins =>
+          prevPlugins.map(plugin =>
+            plugin.id === pluginId ? updatedPlugin : plugin
+          )
+        );
+        alert(`Plugin ${isActive ? 'activated' : 'deactivated'} successfully.`);
+      } else {
+        const errorData = await response.json();
+        console.error('Error:', errorData);
+        alert('Error updating plugin status. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating plugin status:', error);
+      alert('Error updating plugin status. Please try again.');
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="background">
       <Navbar />
-      {/* Plugin verilerini göstereceğiniz alan */}
+      <div className="container mt-4">
+        <h2 className="text-center mb-4">Your Plugins</h2>
+        <ul className="list-group">
+          {plugins.length > 0 ? (
+            plugins.map((plugin, index) => (
+              <li key={plugin.id} className="list-group-item d-flex justify-content-between align-items-center">
+                {plugin.name}
+                <div className="switch-wrapper">
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={plugin.isActive}
+                      onChange={(e) => updatePluginStatus(plugin.id, e.target.checked)}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+              </li>
+            ))
+          ) : (
+            <li className="list-group-item">No plugins available</li>
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

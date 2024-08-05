@@ -30,7 +30,7 @@ const SignUp = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/categories`);
-        setCategories(response.data); // response.data'nın [{ id, name }] formatında olduğunu varsayıyoruz
+        setCategories(response.data); 
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -149,7 +149,7 @@ const SignUp = () => {
     <div className="background">
       <Container className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
-          <Link to="/">
+          <Link >
             <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
           </Link>
 

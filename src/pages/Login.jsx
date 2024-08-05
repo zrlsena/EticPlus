@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import API_BASE_URL from '../config';
 
 const Login = () => {
   const [storeName, setStoreName] = useState('');
@@ -16,19 +16,29 @@ const Login = () => {
 
   async function login(storeName, password) {
     try {
-      const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/login', {
-        storeName: storeName,
-        password: password
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          storeName: storeName,
+          password: password
+        })
       });
 
-      // Giriş başarılı ise token'ı sakla ve profile sayfasına yönlendir
+      const data = await response.json();
+
       if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem('jwtToken', token); // Token'ı localStorage'da sakla
-        navigate('/home'); // Profile sayfasına yönlendir
+        const jwt = data.jwt;
+        localStorage.setItem('jwt', jwt); 
+        navigate('/home');
+      } else {
+        alert('Login failed. Please check your credentials and try again.');
       }
     } catch (error) {
-      console.error('Login failed:', error.response.data);
+      console.error('Login failed:', error);
       alert('Login failed. Please check your credentials and try again.');
     }
   }
@@ -46,7 +56,7 @@ const Login = () => {
     <div className="background">
       <div className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
-          <Link to="/">
+          <Link >
             <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
           </Link>
 
