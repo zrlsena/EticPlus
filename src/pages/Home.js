@@ -47,25 +47,24 @@ function Home() {
     }
   }, [navigate]);
 
-  const updatePluginStatus = async (pluginId, isActive) => {
+  const updatePluginStatus = async (pluginName, isActive) => {
     const jwt = localStorage.getItem('jwt');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/togglePlugin`, {
+      const response = await fetch(`${API_BASE_URL}/api/togglePlugin?pluginName=${pluginName}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ id: pluginId, isActive })
+          'Content-Type': 'application/json'
+        }
       });
-
       if (response.ok) {
-        const updatedPlugin = await response.json();
+        // Durumu güncelledikten sonra yerel durumu güncelle
         setPlugins(prevPlugins =>
           prevPlugins.map(plugin =>
-            plugin.id === pluginId ? updatedPlugin : plugin
+            plugin.name === pluginName ? { ...plugin, isActive: !isActive } : plugin
           )
         );
-        alert(`Plugin ${isActive ? 'activated' : 'deactivated'} successfully.`);
+        alert(`Plugin ${isActive ? 'deactivated' : 'activated'} successfully.`);
       } else {
         const errorData = await response.json();
         console.error('Error:', errorData);
@@ -76,11 +75,13 @@ function Home() {
       alert('Error updating plugin status. Please try again.');
     }
   };
-
+  useEffect(() => {
+    getHomePage();
+  }, [navigate]);
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  
   return (
     <div className="background">
       <Navbar />
@@ -89,14 +90,14 @@ function Home() {
         <ul className="list-group">
           {plugins.length > 0 ? (
             plugins.map((plugin, index) => (
-              <li key={plugin.id} className="list-group-item d-flex justify-content-between align-items-center">
+              <li key={plugin.pluginName} className="list-group-item d-flex justify-content-between align-items-center">
                 {plugin.name}
                 <div className="switch-wrapper">
                   <label className="switch">
                     <input
                       type="checkbox"
                       checked={plugin.isActive}
-                      onChange={(e) => updatePluginStatus(plugin.id, e.target.checked)}
+                      onChange={(e) => updatePluginStatus(plugin.pluginName, e.target.checked)}
                     />
                     <span className="slider round"></span>
                   </label>

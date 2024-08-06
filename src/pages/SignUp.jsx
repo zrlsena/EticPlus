@@ -30,7 +30,7 @@ const SignUp = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/categories`);
-        setCategories(response.data); 
+        setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -94,8 +94,13 @@ const SignUp = () => {
       { regex: /^[^ğüşıöçĞÜŞİÖÇ]+$/, message: 'Password must not contain Turkish characters.' },
     ];
 
+    const storeNameCriteria = /^[^ğüşıöçĞÜŞİÖÇ]+$/;
+
     if (storeName.length < 3 || storeName.length > 20) {
-      setStoreNameError('StoreName must be between 3 and 20 characters.');
+      setStoreNameError('Store Name must be between 3 and 20 characters.');
+      isValid = false;
+    } else if (!storeNameCriteria.test(storeName)) {
+      setStoreNameError('Store Name must not contain Turkish characters.');
       isValid = false;
     }
 
@@ -108,7 +113,7 @@ const SignUp = () => {
     }
 
     if (!selectedCategory) {
-      setCategoryError('Please select a store.');
+      setCategoryError('Please select a store category.');
       isValid = false;
     }
 
@@ -123,18 +128,19 @@ const SignUp = () => {
         if (response.data.exists) {
           setStoreNameError('Store name is already taken.');
           isValid = false;
-        }else {
-          setStoreNameError(''); 
+        } else {
+          setStoreNameError('');
         }
       } catch (error) {
         console.error('Error checking store name:', error);
-        setStoreNameError('This store name already exist.');
+        setStoreNameError('Error checking store name.');
         isValid = false;
       }
     }
 
     return isValid;
   };
+
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -181,27 +187,28 @@ const SignUp = () => {
               </Col>
 
               <Col md={6}>
-                <Form.Group controlId="formPassword">
-                  <Form.Label className='input-title'>Password</Form.Label>
-                  <div className="password-container">
-                    <Form.Control
-                      type={passwordVisible ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      minLength="4"
-                      maxLength="15"
-                      placeholder="Create strong password"
-                      isInvalid={!!passwordError}
-                      className="custom-placeholder"
-                    />
-                    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button " style={{paddingRight: passwordError ? '25px' : '0'}}>
-                      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-                    </button>
-                  </div>
-                  <Form.Control.Feedback type="invalid">
-                    {passwordError}
-                  </Form.Control.Feedback>
-                </Form.Group>
+              <Form.Group controlId="formPassword">
+  <Form.Label className='input-title'>Password</Form.Label>
+  <div className="password-container">
+    <Form.Control
+      type={passwordVisible ? 'text' : 'password'}
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      minLength="4"
+      maxLength="15"
+      placeholder="Create strong password"
+      isInvalid={!!passwordError}
+      className="custom-placeholder"
+    />
+    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button" style={{ paddingRight: passwordError ? '25px' : '0' }}>
+      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+    </button>
+  </div>
+  <Form.Control.Feedback type="invalid">
+    {passwordError}
+  </Form.Control.Feedback>
+</Form.Group>
+
               </Col>
             </Row>
 
@@ -213,7 +220,7 @@ const SignUp = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 isInvalid={!!categoryError}
                 className="custom-placeholder"
-                style={{ fontSize: '0.9rem', height: '2.5rem'}}
+                style={{ fontSize: '0.9rem', height: '2.5rem' }}
               >
                 <option value="">Select a store category</option>
                 {categories.map((category) => (
@@ -237,7 +244,7 @@ const SignUp = () => {
                     className={`package-card p-3 border rounded-5 ${packageType === pkg.value ? 'selected' : ''}`}
                     onClick={() => setPackageType(pkg.value)}
                   >
-                    <Form.Check 
+                    <Form.Check
                       type="radio"
                       value={pkg.value}
                       checked={packageType === pkg.value}
@@ -268,8 +275,8 @@ const SignUp = () => {
               ))}
             </Row>
 
-            <Button 
-              style={{ backgroundColor:'#17CC82',borderColor:'transparent' }}
+            <Button
+              style={{ backgroundColor: '#17CC82', borderColor: 'transparent' }}
               type="submit"
               className="btn btn-primary w-100 mb-3 "
             >
@@ -281,7 +288,7 @@ const SignUp = () => {
           </Form>
 
           <Modal show={showSuccessModal} onHide={handleModalClose} class="modal-dialog modal-fullscreen" >
-            <Modal.Header closeButton style={{ backgroundColor:'#17CC82' }} >
+            <Modal.Header closeButton style={{ backgroundColor: '#17CC82' }} >
               <Modal.Title >Success!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
