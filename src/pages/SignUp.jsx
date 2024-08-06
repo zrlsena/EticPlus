@@ -24,8 +24,6 @@ const SignUp = () => {
 
   const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
 
-
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -92,15 +90,24 @@ const SignUp = () => {
       { regex: /[a-z]/, message: 'Password must contain at least one lowercase letter.' },
       { regex: /\d/, message: 'Password must contain at least one digit.' },
       { regex: /^[^ğüşıöçĞÜŞİÖÇ]+$/, message: 'Password must not contain Turkish characters.' },
+      { regex: /^\S*$/, message: 'Password must not contain spaces.' },
     ];
 
-    const storeNameCriteria = /^[^ğüşıöçĞÜŞİÖÇ]+$/;
+    const storeNameCriteria = /^[^\s][^\W_]+[^\s]$/; 
+    const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/; 
+    const storeNameDoubleSpaces = /\s{2,}/;
 
     if (storeName.length < 3 || storeName.length > 20) {
       setStoreNameError('Store Name must be between 3 and 20 characters.');
       isValid = false;
+    } else if (storeNameInvalidCharacters.test(storeName)) {
+      setStoreNameError('Store Name must not contain special characters.');
+      isValid = false;
+    } else if (storeNameDoubleSpaces.test(storeName)) {
+      setStoreNameError('Store Name must not contain consecutive spaces.');
+      isValid = false;
     } else if (!storeNameCriteria.test(storeName)) {
-      setStoreNameError('Store Name must not contain Turkish characters.');
+      setStoreNameError('Store Name must not have spaces at the beginning or end.');
       isValid = false;
     }
 
@@ -139,7 +146,6 @@ const SignUp = () => {
     return isValid;
   };
 
-
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -148,6 +154,7 @@ const SignUp = () => {
     setShowSuccessModal(false);
     navigate('/login'); // Navigate to login after closing the modal
   };
+
 
   return (
     <div className="background">
@@ -178,7 +185,7 @@ const SignUp = () => {
                     isInvalid={!!storeNameError}
                     className="custom-placeholder"
                   />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" className='storeNameError'>
                     {storeNameError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -202,7 +209,7 @@ const SignUp = () => {
                       <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
                     </button>
                   </div>
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" className='passwordError'>
                     {passwordError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -301,3 +308,6 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+//password de hiçbir şekilde boşluk kabul edilmeyecek
