@@ -152,7 +152,7 @@ const SignUp = () => {
 
   const handleModalClose = () => {
     setShowSuccessModal(false);
-    navigate('/login'); // Navigate to login after closing the modal
+    navigate('/login'); 
   };
 
 
@@ -234,14 +234,16 @@ const SignUp = () => {
                   </option>
                 ))}
               </Form.Control>
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" className='categoryError'>
                 {categoryError}
               </Form.Control.Feedback>
             </Form.Group>
 
 
             <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
-
+            <Form.Control.Feedback type="invalid" className='packageError'>
+  {packageError}
+</Form.Control.Feedback>
             <Row className="mb-4">
               {packageData.map(pkg => (
                 <Col md={4} key={pkg.value}>
@@ -277,7 +279,9 @@ const SignUp = () => {
                     </Form.Check>
                   </div>
                 </Col>
+                
               ))}
+          
             </Row>
 
             <Button
@@ -310,4 +314,3 @@ const SignUp = () => {
 export default SignUp;
 
 
-//password de hiçbir şekilde boşluk kabul edilmeyecek
