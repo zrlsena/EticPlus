@@ -132,8 +132,6 @@ const SignUp = () => {
           setStoreNameError('');
         }
       } catch (error) {
-        console.error('Error checking store name:', error);
-        setStoreNameError('Error checking store name.');
         isValid = false;
       }
     }
@@ -187,27 +185,27 @@ const SignUp = () => {
               </Col>
 
               <Col md={6}>
-              <Form.Group controlId="formPassword">
-  <Form.Label className='input-title'>Password</Form.Label>
-  <div className="password-container">
-    <Form.Control
-      type={passwordVisible ? 'text' : 'password'}
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      minLength="4"
-      maxLength="15"
-      placeholder="Create strong password"
-      isInvalid={!!passwordError}
-      className="custom-placeholder"
-    />
-    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button" style={{ paddingRight: passwordError ? '25px' : '0' }}>
-      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-    </button>
-  </div>
-  <Form.Control.Feedback type="invalid">
-    {passwordError}
-  </Form.Control.Feedback>
-</Form.Group>
+                <Form.Group controlId="formPassword">
+                  <Form.Label className='input-title'>Password</Form.Label>
+                  <div className="password-container">
+                    <Form.Control
+                      type={passwordVisible ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      minLength="4"
+                      maxLength="15"
+                      placeholder="Create strong password"
+                      isInvalid={!!passwordError}
+                      className="custom-placeholder"
+                    />
+                    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button" style={{ paddingRight: passwordError ? '25px' : '0' }}>
+                      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                    </button>
+                  </div>
+                  <Form.Control.Feedback type="invalid">
+                    {passwordError}
+                  </Form.Control.Feedback>
+                </Form.Group>
 
               </Col>
             </Row>

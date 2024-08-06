@@ -58,30 +58,26 @@ function Home() {
         }
       });
       if (response.ok) {
-        // Durumu güncelledikten sonra yerel durumu güncelle
         setPlugins(prevPlugins =>
           prevPlugins.map(plugin =>
-            plugin.name === pluginName ? { ...plugin, isActive: !isActive } : plugin
+            plugin.name === pluginName ? { ...plugin, isActive: !plugin.isActive } : plugin
           )
         );
-        alert(`Plugin ${isActive ? 'deactivated' : 'activated'} successfully.`);
+        console.log(`Plugin ${isActive ? 'deactivated' : 'activated'} successfully.`);
       } else {
         const errorData = await response.json();
         console.error('Error:', errorData);
-        alert('Error updating plugin status. Please try again.');
+        console.log('Error updating plugin status. Please try again.');
       }
     } catch (error) {
       console.error('Error updating plugin status:', error);
-      alert('Error updating plugin status. Please try again.');
+      console.log('Error updating plugin status. Please try again.');
     }
   };
-  useEffect(() => {
-    getHomePage();
-  }, [navigate]);
   if (loading) {
     return <div>Loading...</div>;
   }
-  
+
   return (
     <div className="background">
       <Navbar />
@@ -90,14 +86,14 @@ function Home() {
         <ul className="list-group">
           {plugins.length > 0 ? (
             plugins.map((plugin, index) => (
-              <li key={plugin.pluginName} className="list-group-item d-flex justify-content-between align-items-center">
+              <li key={plugin.name} className="list-group-item d-flex justify-content-between align-items-center">
                 {plugin.name}
                 <div className="switch-wrapper">
                   <label className="switch">
                     <input
                       type="checkbox"
                       checked={plugin.isActive}
-                      onChange={(e) => updatePluginStatus(plugin.pluginName, e.target.checked)}
+                      onChange={(e) => updatePluginStatus(plugin.name, e.target.checked)}
                     />
                     <span className="slider round"></span>
                   </label>
