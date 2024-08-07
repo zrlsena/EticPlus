@@ -236,10 +236,10 @@ a {
 }
 
 .package-card {
-  cursor: pointer; /* Tıklanabilir olduğunu gösterir */
+  cursor: pointer; 
   transition: background-color 0.3s, color 0.3s;
   border: 1px solid #ccc; 
-  height: 220px;/* Paket kartlarının kenar çizgisi */
+  height: 220px;
 }
 
 .package-card.selected {
@@ -252,9 +252,7 @@ a {
 }
 
 .password-toggle-button {
-  position: absolute;
-  right: 10px;
-  top: 50%;
+  position: relative;
   transform: translateY(-50%);
   background: none;
   border: none;

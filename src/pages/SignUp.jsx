@@ -194,7 +194,6 @@ const SignUp = () => {
               <Col md={6}>
                 <Form.Group controlId="formPassword">
                   <Form.Label className='input-title'>Password</Form.Label>
-                  <div className="password-container">
                     <Form.Control
                       type={passwordVisible ? 'text' : 'password'}
                       value={password}
@@ -205,16 +204,13 @@ const SignUp = () => {
                       isInvalid={!!passwordError}
                       className="custom-placeholder"
                     />
-                    <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button" style={{ paddingRight: passwordError ? '25px' : '0' }}>
-                      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-                    </button>
-                  </div>
+                 
                   <Form.Control.Feedback type="invalid" className='passwordError'>
                     {passwordError}
                   </Form.Control.Feedback>
                 </Form.Group>
-
               </Col>
+              
             </Row>
 
             <Form.Group className="mb-4 ">
