@@ -252,7 +252,7 @@ a {
 }
 
 .password-toggle-button {
-  position: relative;
+  position: absolute;
   transform: translateY(-50%);
   background: none;
   border: none;

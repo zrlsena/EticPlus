@@ -207,9 +207,7 @@ function Profile() {
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Current Password"
                     />
-                    <button type="button" onClick={() => togglePasswordVisibility('currentPassword')} className="password-toggle-button">
-                      <FontAwesomeIcon icon={passwordVisible.currentPassword ? faEyeSlash : faEye} />
-                    </button>
+                    
                   </div>
                 </Form.Group>
 
@@ -223,9 +221,7 @@ function Profile() {
                       onChange={(e) => setNewPassword1(e.target.value)}
                       placeholder="New Password"
                     />
-                    <button type="button" onClick={() => togglePasswordVisibility('newPassword1')} className="password-toggle-button">
-                      <FontAwesomeIcon icon={passwordVisible.newPassword1 ? faEyeSlash : faEye} />
-                    </button>
+                    
                   </div>
                 </Form.Group>
 
@@ -239,9 +235,7 @@ function Profile() {
                       onChange={(e) => setNewPassword2(e.target.value)}
                       placeholder="Confirm New Password"
                     />
-                    <button type="button" onClick={() => togglePasswordVisibility('newPassword2')} className="password-toggle-button">
-                      <FontAwesomeIcon icon={passwordVisible.newPassword2 ? faEyeSlash : faEye} />
-                    </button>
+                    
                   </div>
                 </Form.Group>
 

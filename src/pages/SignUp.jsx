@@ -5,13 +5,10 @@ import axios from 'axios';
 import { packageData } from '../components/PackageData';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -21,8 +18,6 @@ const SignUp = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
-
-  const apiUrl = 'https://bilir-d108588758e4.herokuapp.com/api/register';
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -37,47 +32,7 @@ const SignUp = () => {
     fetchCategories();
   }, []);
 
-  const handleSignIn = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          storeName,
-          category: selectedCategory,
-          password,
-          packageType,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-
-      const data = await response.json();
-      console.log('Sign Up successful:', data);
-      setShowSuccessModal(true);
-
-      setTimeout(() => {
-        setShowSuccessModal(false);
-        navigate('/login');
-      }, 2000);
-
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
-  };
-
-  const validateForm = async () => {
+  const validateForm = () => {
     let isValid = true;
     setStoreNameError('');
     setPasswordError('');
@@ -93,7 +48,6 @@ const SignUp = () => {
       { regex: /^\S*$/, message: 'Password must not contain spaces.' },
     ];
 
-    const storeNameCriteria = /^[^\s][^\W_]+[^\s]$/;
     const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
     const storeNameDoubleSpaces = /\s{2,}/;
     const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
@@ -130,25 +84,50 @@ const SignUp = () => {
       isValid = false;
     }
 
-    if (isValid) {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/check-store-name?storeName=${storeName}`);
-        if (response.data.exists) {
-          setStoreNameError('Store name is already taken.');
-          isValid = false;
-        } else {
-          setStoreNameError('');
-        }
-      } catch (error) {
-        isValid = false;
-      }
-    }
-
     return isValid;
   };
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+  
+    if (validateForm()) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            storeName,
+            category: selectedCategory,
+            password,
+            packageType,
+          }),
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          if (errorData.errorCode === 'storeNameTaken') {
+            setStoreNameError('Store name is already taken.');
+          } else {
+            setStoreNameError('Store name is already taken.');
+          }
+          console.error('Error response data:', errorData);
+        } else {
+          const data = await response.json();
+          console.log('Sign Up successful:', data);
+          setShowSuccessModal(true);
+  
+          setTimeout(() => {
+            setShowSuccessModal(false);
+            navigate('/login');
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    }
   };
 
   const handleModalClose = () => {
@@ -168,7 +147,7 @@ const SignUp = () => {
             <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
           </div>
 
-          <Form onSubmit={handleSignIn} className="sign-form bg-light p-4 rounded" noValidate>
+          <Form onSubmit={handleSignUp} className="sign-form bg-light p-4 rounded" noValidate>
             <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px' }}>Sign Up</h1>
 
             <Row className="mb-0">
@@ -185,7 +164,7 @@ const SignUp = () => {
                     isInvalid={!!storeNameError}
                     className="custom-placeholder"
                   />
-                  <Form.Control.Feedback type="invalid" className='storeNameError'>
+                  <Form.Control.Feedback type="invalid">
                     {storeNameError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -195,7 +174,7 @@ const SignUp = () => {
                 <Form.Group controlId="formPassword">
                   <Form.Label className='input-title'>Password</Form.Label>
                   <Form.Control
-                    type={passwordVisible ? 'text' : 'password'}
+                    type='password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     minLength="4"
@@ -204,7 +183,7 @@ const SignUp = () => {
                     isInvalid={!!passwordError}
                     className="custom-placeholder"
                   />
-                  <Form.Control.Feedback type="invalid" className='passwordError'>
+                  <Form.Control.Feedback type="invalid">
                     {passwordError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -228,13 +207,13 @@ const SignUp = () => {
                   </option>
                 ))}
               </Form.Control>
-              <Form.Control.Feedback type="invalid" className='categoryError'>
+              <Form.Control.Feedback type="invalid">
                 {categoryError}
               </Form.Control.Feedback>
             </Form.Group>
 
             <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
-            <Form.Control.Feedback type="invalid" className='packageError'>
+            <Form.Control.Feedback type="invalid">
               {packageError}
             </Form.Control.Feedback>
             <Row className="mb-4">
@@ -261,9 +240,6 @@ const SignUp = () => {
                             {pkg.list && pkg.list.map((item, index) => (
                               <li key={index}>
                                 {item}
-                                {pkg.value === 'PLATINUM' && (
-                                  <span className="text-success fw-bold text-end">✔</span>
-                                )}
                               </li>
                             ))}
                           </ul>

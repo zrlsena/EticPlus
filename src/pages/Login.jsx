@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import API_BASE_URL from '../config';
 
 const Login = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
@@ -29,34 +26,44 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log("Response Data:", data); 
 
       if (response.status === 200) {
         const jwt = data.jwt;
-        localStorage.setItem('jwt', jwt); 
+        localStorage.setItem('jwt', jwt);
         navigate('/home');
+      } else if (response.status === 401) {
+        if (data.error === 'Invalid store name') {
+          setStoreNameError('Invalid store name. Please check and try again.');
+          setPasswordError(''); 
+        } else if (data.error === 'Invalid password') {
+          setPasswordError('Invalid password. Please check and try again.');
+          setStoreNameError(''); 
+        }
       } else {
-        alert('Login failed. Please check your credentials and try again.');
+        console.log('Login failed. Please check your credentials and try again.');
+        setStoreNameError(''); 
+        setPasswordError(''); 
       }
     } catch (error) {
       console.error('Login failed:', error);
-      alert('Login failed. Please check your credentials and try again.');
+      setStoreNameError(''); 
+      setPasswordError(''); 
     }
   }
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setStoreNameError('');
+    setPasswordError('');
     login(storeName, password);
-  };
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
   };
 
   return (
     <div className="background">
       <div className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
-          <Link >
+          <Link>
             <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
           </Link>
 
@@ -77,32 +84,27 @@ const Login = () => {
                 isInvalid={!!storeNameError}
                 className="custom-placeholder"
               />
-              <Form.Control.Feedback type="invalid" className="d-block">
+              <Form.Control.Feedback type="invalid">
                 {storeNameError}
               </Form.Control.Feedback>
             </div>
 
             <div className="form-group mb-3">
               <Form.Label className="input-title">Password</Form.Label>
-              <div className="password-container">
-                <Form.Control
-                  type={passwordVisible ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  isInvalid={!!passwordError}
-                  className="custom-placeholder"
-                />
-                <button type="button" onClick={togglePasswordVisibility} className="password-toggle-button">
-                  <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-                </button>
-              </div>
-              <Form.Control.Feedback type="invalid" className="d-block">
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                isInvalid={!!passwordError}
+                className="custom-placeholder"
+              />
+              <Form.Control.Feedback type="invalid">
                 {passwordError}
               </Form.Control.Feedback>
             </div>
 
-            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor:'#17CC82',borderColor:'transparent' }} type="submit">
+            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor: '#17CC82', borderColor: 'transparent' }} type="submit">
               Sign In
             </button>
 
