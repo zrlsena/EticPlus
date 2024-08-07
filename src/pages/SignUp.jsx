@@ -93,9 +93,10 @@ const SignUp = () => {
       { regex: /^\S*$/, message: 'Password must not contain spaces.' },
     ];
 
-    const storeNameCriteria = /^[^\s][^\W_]+[^\s]$/; 
-    const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/; 
+    const storeNameCriteria = /^[^\s][^\W_]+[^\s]$/;
+    const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
     const storeNameDoubleSpaces = /\s{2,}/;
+    const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
 
     if (storeName.length < 3 || storeName.length > 20) {
       setStoreNameError('Store Name must be between 3 and 20 characters.');
@@ -106,7 +107,7 @@ const SignUp = () => {
     } else if (storeNameDoubleSpaces.test(storeName)) {
       setStoreNameError('Store Name must not contain consecutive spaces.');
       isValid = false;
-    } else if (!storeNameCriteria.test(storeName)) {
+    } else if (!storeNameNoLeadingOrTrailingSpaces.test(storeName)) {
       setStoreNameError('Store Name must not have spaces at the beginning or end.');
       isValid = false;
     }
@@ -152,15 +153,14 @@ const SignUp = () => {
 
   const handleModalClose = () => {
     setShowSuccessModal(false);
-    navigate('/login'); 
+    navigate('/login');
   };
-
 
   return (
     <div className="background">
       <Container className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
-          <Link >
+          <Link>
             <img className="logo" src="/images/eticLogo.png" alt="Etic PLUS Logo" />
           </Link>
 
@@ -194,26 +194,24 @@ const SignUp = () => {
               <Col md={6}>
                 <Form.Group controlId="formPassword">
                   <Form.Label className='input-title'>Password</Form.Label>
-                    <Form.Control
-                      type={passwordVisible ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      minLength="4"
-                      maxLength="15"
-                      placeholder="Create strong password"
-                      isInvalid={!!passwordError}
-                      className="custom-placeholder"
-                    />
-                 
+                  <Form.Control
+                    type={passwordVisible ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    minLength="4"
+                    maxLength="15"
+                    placeholder="Create strong password"
+                    isInvalid={!!passwordError}
+                    className="custom-placeholder"
+                  />
                   <Form.Control.Feedback type="invalid" className='passwordError'>
                     {passwordError}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              
             </Row>
 
-            <Form.Group className="mb-4 ">
+            <Form.Group className="mb-4">
               <Form.Label className='input-title'>Store Category</Form.Label>
               <Form.Control
                 as="select"
@@ -235,11 +233,10 @@ const SignUp = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-
             <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
             <Form.Control.Feedback type="invalid" className='packageError'>
-  {packageError}
-</Form.Control.Feedback>
+              {packageError}
+            </Form.Control.Feedback>
             <Row className="mb-4">
               {packageData.map(pkg => (
                 <Col md={4} key={pkg.value}>
@@ -275,32 +272,29 @@ const SignUp = () => {
                     </Form.Check>
                   </div>
                 </Col>
-                
               ))}
-          
             </Row>
 
             <Button
               style={{ backgroundColor: '#17CC82', borderColor: 'transparent' }}
               type="submit"
-              className="btn btn-primary w-100 mb-3 "
+              className="btn btn-primary w-100 mb-3"
             >
               Sign Up
-            </Button >
+            </Button>
             <p className="text-center">
               Already have a store? <Link to="/login">Login</Link>.
             </p>
           </Form>
 
-          <Modal show={showSuccessModal} onHide={handleModalClose} class="modal-dialog modal-fullscreen" >
-            <Modal.Header closeButton style={{ backgroundColor: '#17CC82' }} >
-              <Modal.Title >Success!</Modal.Title>
+          <Modal show={showSuccessModal} onHide={handleModalClose} class="modal-dialog modal-fullscreen">
+            <Modal.Header closeButton style={{ backgroundColor: '#17CC82' }}>
+              <Modal.Title>Success!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               You have successfully signed up.
             </Modal.Body>
           </Modal>
-
         </div>
       </Container>
     </div>
@@ -308,5 +302,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-

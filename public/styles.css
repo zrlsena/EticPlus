@@ -243,8 +243,8 @@ a {
 }
 
 .package-card.selected {
-  background-color: #9C332D; /* Seçili durumda arka plan rengini ayarlar */
-  color: #fff; /* Seçili durumda metin rengini beyaz yapar */
+  background-color: #9C332D; 
+  color: #fff; 
 }
 
 .password-container {
