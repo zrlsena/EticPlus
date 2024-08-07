@@ -168,7 +168,7 @@ const SignUp = () => {
             <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
           </div>
 
-          <Form onSubmit={handleSignIn} className="sign-form bg-light p-4 rounded">
+          <Form onSubmit={handleSignIn} className="sign-form bg-light p-4 rounded" noValidate>
             <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px' }}>Sign Up</h1>
 
             <Row className="mb-0">
