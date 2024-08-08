@@ -136,7 +136,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="background" style={{ background: "url('/images/SignupBackground.png') no-repeat center center" , backgroundSize: 'cover' }}>
+    <div className="background">
       <Container className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
           <Link>
@@ -207,13 +207,13 @@ const SignUp = () => {
                   </option>
                 ))}
               </Form.Control>
-              <Form.Control.Feedback type="invalid" className='passwordError'>
+              <Form.Control.Feedback type="invalid" className='categoryError'>
                 {categoryError}
               </Form.Control.Feedback>
             </Form.Group>
 
             <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
-            <Form.Control.Feedback type="invalid" className='packageError'>
+            <Form.Control.Feedback type="invalid">
               {packageError}
             </Form.Control.Feedback>
             <Row className="mb-4">
