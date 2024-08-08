@@ -136,7 +136,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="background">
+    <div className="background" style={{ background: "url('/images/SignupBackground.png') no-repeat center center" , backgroundSize: 'cover' }}>
       <Container className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
           <Link>
@@ -164,7 +164,7 @@ const SignUp = () => {
                     isInvalid={!!storeNameError}
                     className="custom-placeholder"
                   />
-                  <Form.Control.Feedback type="invalid" className='storNameError'>
+                  <Form.Control.Feedback type="invalid" className='storeNameError'>
                     {storeNameError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -207,7 +207,7 @@ const SignUp = () => {
                   </option>
                 ))}
               </Form.Control>
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" className='passwordError'>
                 {categoryError}
               </Form.Control.Feedback>
             </Form.Group>

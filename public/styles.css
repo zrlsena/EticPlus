@@ -58,8 +58,6 @@ a {
   left: 0;
   width: 100vw; 
   height: 100vh; 
-  background-color: #F9F1E3;
-  background: url('/images/SignupBackground.png') no-repeat center center;
   background-size: cover; 
   z-index: -1; 
   overflow: hidden;
