@@ -164,7 +164,7 @@ const SignUp = () => {
                     isInvalid={!!storeNameError}
                     className="custom-placeholder"
                   />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" className='storNameError'>
                     {storeNameError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -183,7 +183,7 @@ const SignUp = () => {
                     isInvalid={!!passwordError}
                     className="custom-placeholder"
                   />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" className='passwordError'>
                     {passwordError}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -213,7 +213,7 @@ const SignUp = () => {
             </Form.Group>
 
             <h2 className="mb-2 fs-6 text-center">Choose Your Plan</h2>
-            <Form.Control.Feedback type="invalid">
+            <Form.Control.Feedback type="invalid" className='packageError'>
               {packageError}
             </Form.Control.Feedback>
             <Row className="mb-4">

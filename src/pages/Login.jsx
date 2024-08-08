@@ -11,6 +11,19 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
+  const validateInputs = () => {
+    let isValid = true;
+    if (!storeName) {
+      setStoreNameError('Store name field must not be left empty.');
+      isValid = false;
+    }
+    if (!password) {
+      setPasswordError('Password field must not be left empty.');
+      isValid = false;
+    }
+    return isValid;
+  };
+
   async function login(storeName, password) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/login`, {
@@ -32,23 +45,18 @@ const Login = () => {
         const jwt = data.jwt;
         localStorage.setItem('jwt', jwt);
         navigate('/home');
-      } else if (response.status === 401) {
-        if (data.error === 'Invalid store name') {
+      } else if (response.status === 400) {
+        if (data.errorCode === 'USER_NOT_FOUND') {
           setStoreNameError('Invalid store name. Please check and try again.');
-          setPasswordError(''); 
-        } else if (data.error === 'Invalid password') {
+        }
+        if (data.errorCode === 'LOGIN_ERROR') {
           setPasswordError('Invalid password. Please check and try again.');
-          setStoreNameError(''); 
         }
       } else {
         console.log('Login failed. Please check your credentials and try again.');
-        setStoreNameError(''); 
-        setPasswordError(''); 
       }
     } catch (error) {
       console.error('Login failed:', error);
-      setStoreNameError(''); 
-      setPasswordError(''); 
     }
   }
 
@@ -56,7 +64,9 @@ const Login = () => {
     e.preventDefault();
     setStoreNameError('');
     setPasswordError('');
-    login(storeName, password);
+    if (validateInputs()) {
+      login(storeName, password);
+    }
   };
 
   return (
@@ -84,7 +94,7 @@ const Login = () => {
                 isInvalid={!!storeNameError}
                 className="custom-placeholder"
               />
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" className='storNameError'>
                 {storeNameError}
               </Form.Control.Feedback>
             </div>
@@ -99,7 +109,7 @@ const Login = () => {
                 isInvalid={!!passwordError}
                 className="custom-placeholder"
               />
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" className='passwordError'>
                 {passwordError}
               </Form.Control.Feedback>
             </div>
