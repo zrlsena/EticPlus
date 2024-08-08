@@ -58,6 +58,7 @@ a {
   left: 0;
   width: 100vw; 
   height: 100vh; 
+  background-color: #F9F1E3;
   background-size: cover; 
   z-index: -1; 
   overflow: hidden;
@@ -284,8 +285,8 @@ a {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
   border-radius: 34px;
+  transition: 0.2s;
 }
 
 .slider:before {
@@ -297,7 +298,7 @@ a {
   left: 4px;
   bottom: 4px;
   background-color: white;
-  transition: .4s;
+  transition: 0.2s;
 }
 
 input:checked + .slider {

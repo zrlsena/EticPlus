@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="background">
+    <div className="background" style={{  background: "url('/images/SignupBackground.png') no-repeat center center", backgroundSize: 'cover'}}>
       <div className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
           <Link>
