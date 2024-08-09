@@ -94,7 +94,7 @@ const Login = () => {
                 isInvalid={!!storeNameError}
                 className="custom-placeholder"
               />
-              <Form.Control.Feedback type="invalid" className='storNameError'>
+              <Form.Control.Feedback type="invalid" className='storeNameError'>
                 {storeNameError}
               </Form.Control.Feedback>
             </div>

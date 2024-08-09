@@ -226,6 +226,17 @@ a {
   padding-left: 0;
 
 }
+.package-card.GOLD {
+  background-color: #ECB907;
+}
+
+.package-card.SILVER {
+  background-color: #8F95B2; 
+}
+
+.package-card.PLATINIUM {
+  background-color: #CD3C70; 
+}
 
 .package-content li {
   margin-bottom: 0.2em;

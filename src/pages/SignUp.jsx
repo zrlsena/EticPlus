@@ -9,7 +9,7 @@ import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [packageType, setPackageType] = useState('');
+  const [packageType, setPackageType] = useState(packageData[0]?.value || ''); 
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [categoryError, setCategoryError] = useState('');
@@ -147,7 +147,7 @@ const SignUp = () => {
             <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
           </div>
 
-          <Form onSubmit={handleSignUp} className="sign-form bg-light p-4 rounded" noValidate>
+          <Form onSubmit={handleSignUp} className="sign-form bg-light p-4 rounded" style={{backgroundColor:''}} noValidate>
             <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px' }}>Sign Up</h1>
 
             <Row className="mb-0">
@@ -217,39 +217,40 @@ const SignUp = () => {
               {packageError}
             </Form.Control.Feedback>
             <Row className="mb-4">
-              {packageData.map(pkg => (
-                <Col md={4} key={pkg.value}>
-                  <div
-                    className={`package-card p-3 border rounded-5 ${packageType === pkg.value ? 'selected' : ''}`}
-                    onClick={() => setPackageType(pkg.value)}
-                  >
-                    <Form.Check
-                      type="radio"
-                      value={pkg.value}
-                      checked={packageType === pkg.value}
-                      onChange={(e) => setPackageType(e.target.value)}
-                      id={pkg.value}
-                      name="package"
-                    >
-                      <Form.Check.Input type="radio" className="d-none" />
-                      <Form.Check.Label>
-                        <div className="package-content">
-                          <h3>{pkg.title}</h3>
-                          <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
-                          <ul>
-                            {pkg.list && pkg.list.map((item, index) => (
-                              <li key={index}>
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </Form.Check.Label>
-                    </Form.Check>
-                  </div>
-                </Col>
-              ))}
-            </Row>
+  {packageData.map((pkg) => (
+    <Col md={4} key={pkg.value}>
+      <div
+        className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
+        onClick={() => setPackageType(pkg.value)}
+      >
+        <Form.Check
+          type="radio"
+          value={pkg.value}
+          checked={packageType === pkg.value}
+          onChange={(e) => setPackageType(e.target.value)}
+          id={pkg.value}
+          name="package"
+        >
+          <Form.Check.Input type="radio" className="d-none" />
+          <Form.Check.Label>
+            <div className="package-content">
+              <h3>{pkg.title}</h3>
+              <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
+              <ul>
+                {pkg.list && pkg.list.map((item, index) => (
+                  <li key={index}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Form.Check.Label>
+        </Form.Check>
+      </div>
+    </Col>
+  ))}
+</Row>
+
 
             <Button
               style={{ backgroundColor: '#17CC82', borderColor: 'transparent' }}
