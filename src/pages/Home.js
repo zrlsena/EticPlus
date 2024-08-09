@@ -10,7 +10,6 @@ function Home() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
-  
 
   async function getHomePage() {
     const jwt = localStorage.getItem('jwt');
@@ -113,15 +112,7 @@ function Home() {
     }
   }, [plugins, userPackageType]);
 
-  useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => {
-        setErrorMessage('');
-      }, 5000); 
 
-      return () => clearTimeout(timer);
-    }
-  }, [errorMessage]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -150,7 +141,7 @@ function Home() {
             {plugins.length > 0 ? (
               plugins.map((plugin, index) => (
                 <li key={plugin.name} className="list-group-item d-flex justify-content-between align-items-center p-3 ps-4 pe-4" style={{
-                  fontSize: '24px',
+                  fontSize: '18px',
                   opacity: '0.7',
                   borderTopLeftRadius: index === 0 ? '36px' : '0',
                   borderTopRightRadius: index === 0 ? '36px' : '0',
@@ -179,11 +170,20 @@ function Home() {
           </ul>
 
           {errorMessage && (
-            <div className="alert alert-danger alert-dismissible fade show mt-3" role="alert" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto', borderRadius: '8px', fontSize: '14px' }}>
-              <strong>{errorMessage}</strong>
+            <div className="alert alert-danger alert-dismissible fade show  mt-3" role="alert" style={{ width: '100%',height:'auto',marginLeft:'15px',paddingBottom:'0px',color:'white', maxWidth: '980px', margin: '0 auto', borderRadius: '28px', fontSize: '14px' , backgroundColor:'#EA493F' }}>
+              <p>
+      You cannot activate more than 3 integrations.<br />
+      Change to <strong>Platinum </strong>to be able to activate more than 3 integrations at the same time.</p>
+              <button
+                type="button"
+                className="btn-close btn-close-white"
+                style={{ width: '8px', height: '8px', fontSize: '12px', marginRight:'10px',color:'white' }} 
+                data-bs-dismiss="alert"
+                aria-label="Close"
+                onClick={() => setErrorMessage(false)}
+              ></button>
             </div>
           )}
-
         </div>
       </div>
 

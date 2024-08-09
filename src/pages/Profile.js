@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { Form, Button, Container, Col, Row, Alert } from 'react-bootstrap';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Profile() {
   const [userData, setUserData] = useState({
