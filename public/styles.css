@@ -255,8 +255,9 @@ a {
 }
 
 .package-card.selected {
-  background-color: #9C332D; 
   color: #fff; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7); 
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .password-container {

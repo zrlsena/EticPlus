@@ -8,6 +8,8 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [userPackageType, setUserPackageType] = useState('');
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   async function getHomePage() {
     const jwt = localStorage.getItem('jwt');
@@ -81,29 +83,36 @@ function Home() {
       } else {
         const errorData = await response.json();
         console.error('Error:', errorData);
-        console.log('Error updating plugin status. Please try again.');
+        setErrorMessage(errorData.errorDesc || 'Error updating plugin status. Please try again.'); // Hata mesajını ayarla
       }
     } catch (error) {
       console.error('Error updating plugin status:', error);
-      console.log('Error updating plugin status. Please try again.');
+      setErrorMessage('Error updating plugin status. Please try again.'); // Hata mesajını ayarla
     }
   };
 
   useEffect(() => {
     if (plugins && plugins.length > 0) {
+      let newErrorMessage = '';
       plugins.forEach(plugin => {
         const toggleButton = document.getElementById(`toggle-${plugin.name}`);
         const activePluginCount = plugins.filter(p => p.active && p.name !== 'Benim Sayfam').length;
-
+  
         if ((userPackageType === 'SILVER' || userPackageType === 'GOLD') && activePluginCount >= 4 && !plugin.active && plugin.name !== 'Benim Sayfam') {
+          newErrorMessage = 'Silver ve Gold paketlerde sadece 4 eklenti aktif olabilir.';
+          setErrorMessage('Silver ve Gold paketlerde sadece 4 eklenti aktif olabilir.'); // Hata mesajını ayarla
+    
           toggleButton.disabled = true;
         } else {
           toggleButton.disabled = false;
-
         }
       });
+      console.log('New Error Message:', newErrorMessage); // Hata mesajını kontrol et
+      setErrorMessage(newErrorMessage); // Hata mesajını state'e ata
     }
   }, [plugins, userPackageType]);
+  
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -123,16 +132,18 @@ function Home() {
             position: 'relative',
           }}>
           <h2 className="text-start mb-3 mt-4" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Integrations </h2>
+          
+         
 
           <ul className="list-group" style={{ border: '4px solid #007AFF', borderRadius: '36px', width: '1000px', position: 'relative' }}>
-          <img src="/images/home.png"class="float-end" alt="Etic PLUS Logo"style={{ position: 'absolute', top: '-122px', right: '40px', width: '80px', }} />
+            <img src="/images/home.png" class="float-end" alt="Etic PLUS Logo" style={{ position: 'absolute', top: '-122px', right: '40px', width: '80px', }} />
 
             {plugins.length > 0 ? (
               plugins.map((plugin, index) => (
-                <li key={plugin.name} className="list-group-item d-flex justify-content-between align-items-center p-3 ps-4 pe-4" style={{ 
-                  fontSize: '24px', 
-                  opacity: '0.7', 
-                  borderTopLeftRadius: index === 0 ? '36px' : '0', 
+                <li key={plugin.name} className="list-group-item d-flex justify-content-between align-items-center p-3 ps-4 pe-4" style={{
+                  fontSize: '24px',
+                  opacity: '0.7',
+                  borderTopLeftRadius: index === 0 ? '36px' : '0',
                   borderTopRightRadius: index === 0 ? '36px' : '0',
                   borderBottomLeftRadius: index === plugins.length - 1 ? '36px' : '0',
                   borderBottomRightRadius: index === plugins.length - 1 ? '36px' : '0',
@@ -157,8 +168,15 @@ function Home() {
               <li className="list-group-item">No plugins available</li>
             )}
           </ul>
+          {errorMessage && (
+  <div className="alert alert-danger" role="alert">
+    <p>{errorMessage}</p>
+  </div>
+)}
+
         </div>
       </div>
+      
     </div>
   );
 }
