@@ -10,6 +10,7 @@ function Home() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
+  
 
   async function getHomePage() {
     const jwt = localStorage.getItem('jwt');
@@ -83,11 +84,11 @@ function Home() {
       } else {
         const errorData = await response.json();
         console.error('Error:', errorData);
-        setErrorMessage(errorData.errorDesc || 'Error updating plugin status. Please try again.'); // Hata mesajını ayarla
+        setErrorMessage('You cannot activate more than 3 integrations. Change to Platinum to be able to active more than 3 integrations at the same time');
       }
     } catch (error) {
       console.error('Error updating plugin status:', error);
-      setErrorMessage('Error updating plugin status. Please try again.'); // Hata mesajını ayarla
+      setErrorMessage('You cannot activate more than 3 integrations. Change to Platinum to be able to active more than 3 integrations at the same time');
     }
   };
 
@@ -97,22 +98,30 @@ function Home() {
       plugins.forEach(plugin => {
         const toggleButton = document.getElementById(`toggle-${plugin.name}`);
         const activePluginCount = plugins.filter(p => p.active && p.name !== 'Benim Sayfam').length;
-  
+
         if ((userPackageType === 'SILVER' || userPackageType === 'GOLD') && activePluginCount >= 4 && !plugin.active && plugin.name !== 'Benim Sayfam') {
           newErrorMessage = 'Silver ve Gold paketlerde sadece 4 eklenti aktif olabilir.';
-          setErrorMessage('Silver ve Gold paketlerde sadece 4 eklenti aktif olabilir.'); // Hata mesajını ayarla
-    
+          setErrorMessage('You cannot activate more than 3 integrations. Change to Platinum to be able to active more than 3 integrations at the same time'); // Hata mesajını ayarla
+
           toggleButton.disabled = true;
         } else {
           toggleButton.disabled = false;
         }
       });
-      console.log('New Error Message:', newErrorMessage); // Hata mesajını kontrol et
-      setErrorMessage(newErrorMessage); // Hata mesajını state'e ata
+      console.log('New Error Message:', newErrorMessage);
+      setErrorMessage(newErrorMessage);
     }
   }, [plugins, userPackageType]);
-  
 
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 5000); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -132,8 +141,8 @@ function Home() {
             position: 'relative',
           }}>
           <h2 className="text-start mb-3 mt-4" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Integrations </h2>
-          
-         
+
+
 
           <ul className="list-group" style={{ border: '4px solid #007AFF', borderRadius: '36px', width: '1000px', position: 'relative' }}>
             <img src="/images/home.png" class="float-end" alt="Etic PLUS Logo" style={{ position: 'absolute', top: '-122px', right: '40px', width: '80px', }} />
@@ -168,15 +177,16 @@ function Home() {
               <li className="list-group-item">No plugins available</li>
             )}
           </ul>
+
           {errorMessage && (
-  <div className="alert alert-danger" role="alert">
-    <p>{errorMessage}</p>
-  </div>
-)}
+            <div className="alert alert-danger alert-dismissible fade show mt-3" role="alert" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto', borderRadius: '8px', fontSize: '14px' }}>
+              <strong>{errorMessage}</strong>
+            </div>
+          )}
 
         </div>
       </div>
-      
+
     </div>
   );
 }
