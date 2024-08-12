@@ -9,7 +9,7 @@ import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 const SignUp = () => {
   const [storeName, setStoreName] = useState('');
   const [password, setPassword] = useState('');
-  const [packageType, setPackageType] = useState(packageData[0]?.value || ''); 
+  const [packageType, setPackageType] = useState(packageData[0]?.value || '');
   const [storeNameError, setStoreNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [categoryError, setCategoryError] = useState('');
@@ -49,11 +49,15 @@ const SignUp = () => {
     ];
 
     const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
+    const storeNameTurkishCharacters = /[ğüşıöçĞÜŞİÖÇ]/;
     const storeNameDoubleSpaces = /\s{2,}/;
     const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
 
     if (storeName.length < 3 || storeName.length > 20) {
       setStoreNameError('Store Name must be between 3 and 20 characters.');
+      isValid = false;
+    } else if (storeNameTurkishCharacters.test(storeName)) {
+      setStoreNameError('Store name should not contain Turkish characters.');
       isValid = false;
     } else if (storeNameInvalidCharacters.test(storeName)) {
       setStoreNameError('Store Name must not contain special characters.');
@@ -89,7 +93,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-  
+
     if (validateForm()) {
       try {
         const response = await fetch(`${API_BASE_URL}/api/register`, {
@@ -105,7 +109,7 @@ const SignUp = () => {
             packageType,
           }),
         });
-  
+
         if (!response.ok) {
           const errorData = await response.json();
           if (errorData.errorCode === 'storeNameTaken') {
@@ -118,7 +122,7 @@ const SignUp = () => {
           const data = await response.json();
           console.log('Sign Up successful:', data);
           setShowSuccessModal(true);
-  
+
           setTimeout(() => {
             setShowSuccessModal(false);
             navigate('/login');
@@ -136,7 +140,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="background" style={{  background: "url('/images/SignupBackground.png') no-repeat center center", backgroundSize: 'cover'}}>
+    <div className="background" style={{ background: "url('/images/SignupBackground.png') no-repeat center center", backgroundSize: 'cover' }}>
       <Container className="container d-flex align-items-center justify-content-center">
         <div className="sign-page">
           <Link>
@@ -147,7 +151,7 @@ const SignUp = () => {
             <img src="/images/signupWelcome.png" alt="Etic PLUS Logo" />
           </div>
 
-          <Form onSubmit={handleSignUp} className="sign-form bg-light p-4 rounded" style={{backgroundColor:''}} noValidate>
+          <Form onSubmit={handleSignUp} className="sign-form bg-light p-4 rounded" style={{ backgroundColor: '' }} noValidate>
             <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px' }}>Sign Up</h1>
 
             <Row className="mb-0">
@@ -217,39 +221,39 @@ const SignUp = () => {
               {packageError}
             </Form.Control.Feedback>
             <Row className="mb-4">
-  {packageData.map((pkg) => (
-    <Col md={4} key={pkg.value}>
-      <div
-        className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
-        onClick={() => setPackageType(pkg.value)}
-      >
-        <Form.Check
-          type="radio"
-          value={pkg.value}
-          checked={packageType === pkg.value}
-          onChange={(e) => setPackageType(e.target.value)}
-          id={pkg.value}
-          name="package"
-        >
-          <Form.Check.Input type="radio" className="d-none" />
-          <Form.Check.Label>
-            <div className="package-content">
-              <h3>{pkg.title}</h3>
-              <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
-              <ul>
-                {pkg.list && pkg.list.map((item, index) => (
-                  <li key={index}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Form.Check.Label>
-        </Form.Check>
-      </div>
-    </Col>
-  ))}
-</Row>
+              {packageData.map((pkg) => (
+                <Col md={4} key={pkg.value}>
+                  <div
+                    className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
+                    onClick={() => setPackageType(pkg.value)}
+                  >
+                    <Form.Check
+                      type="radio"
+                      value={pkg.value}
+                      checked={packageType === pkg.value}
+                      onChange={(e) => setPackageType(e.target.value)}
+                      id={pkg.value}
+                      name="package"
+                    >
+                      <Form.Check.Input type="radio" className="d-none" />
+                      <Form.Check.Label>
+                        <div className="package-content">
+                          <h3>{pkg.title}</h3>
+                          <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
+                          <ul>
+                            {pkg.list && pkg.list.map((item, index) => (
+                              <li key={index}>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Form.Check.Label>
+                    </Form.Check>
+                  </div>
+                </Col>
+              ))}
+            </Row>
 
 
             <Button

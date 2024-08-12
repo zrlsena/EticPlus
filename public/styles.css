@@ -61,7 +61,7 @@ a {
   background-color: #F9F1E3;
   background-size: cover; 
   z-index: -1; 
-  overflow: hidden;
+  overflow: auto;
   
   
 }

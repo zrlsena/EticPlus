@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { Form, Button, Container, Col, Row, Alert } from 'react-bootstrap';
+import { width } from '@fortawesome/free-solid-svg-icons/fa0';
 
 function Profile() {
   const [userData, setUserData] = useState({
@@ -87,10 +88,10 @@ function Profile() {
     }
     setPasswordMatch(true);
     setPasswordError('');
-  
+
     console.log('Current Password:', currentPassword);
     console.log('New Password:', newPassword1);
-  
+
     const jwt = localStorage.getItem('jwt');
     try {
       await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updatePassword', {
@@ -110,7 +111,7 @@ function Profile() {
       alert('An error occurred while updating the password.');
     }
   };
-  
+
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
@@ -148,117 +149,104 @@ function Profile() {
   return (
     <div className="background">
       <Navbar />
-      <Container className="bg-light p-5 mt-5 rounded">
-        <Row>
-          <Col md={6}>
-            <div className="profile-container">
-              <h1>Profile</h1>
-              <Form>
-                <Form.Group controlId="formStoreName" style={{ marginBottom: '15px' }}>
-                  <Form.Label className="custom-label">Store Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="storeName"
-                    value={userData.storeName}
-                    onChange={handleInputChange}
-                    placeholder="Store Name"
-                  />
-                </Form.Group>
-                <Form.Group controlId="formCategory" style={{ marginBottom: '15px' }}>
-                  <Form.Label className="custom-label">Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="category"
-                    value={userData.category}
-                    onChange={handleInputChange}
-                    placeholder="Category"
-                  />
-                </Form.Group>
-                <Form.Group controlId="formPackageType" style={{ marginBottom: '15px' }}>
-                  <Form.Label className="custom-label">Package Type</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="packageType"
-                    value={userData.packageType}
-                    onChange={handleInputChange}
-                    placeholder="Package Type"
-                  />
-                </Form.Group>
-                <Button className='mt-4' variant="primary" onClick={handleUpdateProfile}>
-                  Update Profile
-                </Button>
-              </Form>
-            </div>
-          </Col>
+      <div class="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+        <h1 className="text-start " style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
+        <Form className="bg-light p-5 mt-3 rounded" style={{ height: '240px' }}>
+          <Row>
+            <Col>
+              <Form.Group controlId="formStoreName" style={{ marginBottom: '15px' }}>
+                <Form.Label className="custom-label">Store Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="storeName"
+                  value={userData.storeName}
+                  onChange={handleInputChange}
+                  placeholder="Store Name"
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="formCategory" >
+                <Form.Label className="custom-label">Category</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="category"
+                  value={userData.category}
+                  onChange={handleInputChange}
+                  placeholder="Category"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+      </div>
 
-          <Col md={6}>
-            <div className="profile-container">
-              <h2>Password Update</h2>
-              <Form>
-                <Form.Group controlId="formCurrentPassword" style={{ marginBottom: '15px' }}>
-                  <Form.Label className="custom-label">Current Password</Form.Label>
-                  <div className="password-container">
-                    <Form.Control
-                      type={passwordVisible.currentPassword ? "text" : "password"}
-                      name="currentPassword"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      placeholder="Current Password"
-                    />
-                    
-                  </div>
-                </Form.Group>
+      <div class="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+        <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
+          Password Update
+        </h2>
+        <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '240px' }}>
+          <Row>
+            <Col sm={6}  style={{ width: '360px', alignItems:'center', display:'grid' }}>
+              <Form.Group controlId="formCurrentPassword" >
+                <Form.Label className="custom-label">Current Password</Form.Label>
+                <Form.Control
+                  type={passwordVisible.currentPassword ? "text" : "password"}
+                  name="currentPassword"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Current Password"
+                />
+              </Form.Group>
+            </Col>
+            <Col sm={6} style={{ width: '360px' }} >
+              <Form.Group controlId="formNewPassword1">
+                <Form.Label className="custom-label">New Password</Form.Label>
+                <Form.Control className='mb-3'
+                  type={passwordVisible.newPassword1 ? "text" : "password"}
+                  name="newPassword1"
+                  value={newPassword1}
+                  onChange={(e) => setNewPassword1(e.target.value)}
+                  placeholder="New Password"
+                />
+              </Form.Group>
+              <Form.Group controlId="formNewPassword2">
+                <Form.Label className="custom-label">Confirm New Password</Form.Label>
+                <Form.Control
+                  type={passwordVisible.newPassword2 ? "text" : "password"}
+                  name="newPassword2"
+                  value={newPassword2}
+                  onChange={(e) => setNewPassword2(e.target.value)}
+                  placeholder="Confirm New Password"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          {!passwordMatch && (
+            <Alert variant="danger">
+              {passwordError}
+            </Alert>
+          )}
+        </Form>
+      </div>
 
-                <Form.Group controlId="formNewPassword1" style={{ marginBottom: '15px' }}>
-                  <Form.Label className="custom-label">New Password</Form.Label>
-                  <div className="password-container">
-                    <Form.Control
-                      type={passwordVisible.newPassword1 ? "text" : "password"}
-                      name="newPassword1"
-                      value={newPassword1}
-                      onChange={(e) => setNewPassword1(e.target.value)}
-                      placeholder="New Password"
-                    />
-                    
-                  </div>
-                </Form.Group>
 
-                <Form.Group controlId="formNewPassword2" style={{ marginBottom: '15px' }}>
-                  <Form.Label className="custom-label">Confirm New Password</Form.Label>
-                  <div className="password-container">
-                    <Form.Control
-                      type={passwordVisible.newPassword2 ? "text" : "password"}
-                      name="newPassword2"
-                      value={newPassword2}
-                      onChange={(e) => setNewPassword2(e.target.value)}
-                      placeholder="Confirm New Password"
-                    />
-                    
-                  </div>
-                </Form.Group>
+      <div class="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+        <Container  className="bg-light p-5 mt-3 rounded" style={{ height: '240px' }}>
+          <div className="profile-actions mt-2">
 
-                {!passwordMatch && (
-                  <Alert variant="danger">
-                    {passwordError}
-                  </Alert>
-                )}
-                <Button className='mt-4' variant="primary" onClick={handleUpdatePassword}>
-                  Update Password
-                </Button>
-              </Form>
-            </div>
-
-            <div className="profile-actions mt-2">
-              <Button variant="secondary" onClick={handleLogout} className="me-2">
-                Logout
-              </Button>
-              <Button variant="danger" onClick={handleDeleteAccount} className="ml-2">
-                Delete Account
-              </Button>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+            <Button className='mt-4' variant="primary" onClick={handleUpdateProfile}>
+              Update Profile
+            </Button>
+            <Button variant="secondary" onClick={handleLogout} className="me-2">
+              Logout
+            </Button>
+            <Button variant="danger" onClick={handleDeleteAccount} className="ml-2">
+              Delete Account
+            </Button>
+          </div>
+        </Container>
+      </div>
     </div>
   );
 }
