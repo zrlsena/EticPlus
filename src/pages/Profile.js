@@ -21,6 +21,10 @@ function Profile() {
   const [packageType, setPackageType] = useState(''); 
   const [storeNameError, setStoreNameError] = useState('');
 
+  // New States for Category Dropdown
+  const [categories, setCategories] = useState([]); // List of categories
+  const [selectedCategory, setSelectedCategory] = useState(''); // Currently selected category
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,6 +50,7 @@ function Profile() {
         });
 
         setPackageType(response.data.packageType); 
+        setSelectedCategory(response.data.category); // Set default category
 
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -55,7 +60,17 @@ function Profile() {
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('https://bilir-d108588758e4.herokuapp.com/api/categories');
+        setCategories(response.data); // Fetch categories and set to state
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
     fetchUserData();
+    fetchCategories(); // Fetch categories on mount
   }, [navigate]);
 
   const handleInputChange = (e) => {
@@ -73,7 +88,7 @@ function Profile() {
     try {
       await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', {
         storeName: userData.storeName,
-        category: userData.category,
+        category: selectedCategory, // Use selected category
         packageType: packageType, // Use updated packageType state here
       }, {
         headers: {
@@ -158,12 +173,19 @@ function Profile() {
               <Form.Group controlId="formCategory">
                 <Form.Label className="custom-label">Category</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="category"
-                  value={userData.category}
-                  onChange={handleInputChange}
-                  placeholder="Category"
-                />
+                  as="select"
+                  value={selectedCategory} // Use selectedCategory for dropdown
+                  onChange={(e) => setSelectedCategory(e.target.value)} // Update selectedCategory state on change
+                  className="custom-placeholder"
+                  style={{ fontSize: '0.9rem', height: '2.5rem' }}
+                >
+                  <option value="">Select a store category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </Form.Control>
               </Form.Group>
             </Col>
           </Row>
