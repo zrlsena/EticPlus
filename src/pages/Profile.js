@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { packageData } from '../components/PackageData';
-
 import { Form, Button, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,7 +10,7 @@ function Profile() {
   const [userData, setUserData] = useState({
     storeName: '',
     category: '',
-    packageType: ''
+    packageType: '' 
   });
   const [loading, setLoading] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -19,8 +18,8 @@ function Profile() {
   const [newPassword2, setNewPassword2] = useState('');
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [passwordError, setPasswordError] = useState('');
-  const [packageType, setPackageType] = useState(userData.packageType);
-  const [storeNameError, setStoreNameError] = useState(''); // **New state for storeName validation**
+  const [packageType, setPackageType] = useState(''); 
+  const [storeNameError, setStoreNameError] = useState('');
 
   const navigate = useNavigate();
 
@@ -42,9 +41,11 @@ function Profile() {
         setUserData({
           storeName: response.data.storeName,
           category: response.data.category,
-          packageType: response.data.packageType,
+          packageType: response.data.packageType, 
           password: response.data.password
         });
+
+        setPackageType(response.data.packageType); 
 
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -66,33 +67,14 @@ function Profile() {
   };
 
   const handleUpdateProfile = async () => {
-    const { storeName } = userData;
-    const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
-    const storeNameTurkishCharacters = /[ğüşıöçĞÜŞİÖÇ]/;
-    const storeNameDoubleSpaces = /\s{2,}/;
-    const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
-
-    // **Validation check**
-    if (
-      storeName !== userData.storeName && 
-      (storeName.length < 3 || storeName.length > 20 ||
-      storeNameInvalidCharacters.test(storeName) ||
-      storeNameTurkishCharacters.test(storeName) ||
-      storeNameDoubleSpaces.test(storeName) ||
-      !storeNameNoLeadingOrTrailingSpaces.test(storeName))
-    ) {
-      setStoreNameError('Store name must be 3-20 characters long, contain no special characters or Turkish characters, no double spaces, and no leading/trailing spaces.');
-      return;
-    }
-
-    setStoreNameError(''); // **Clear any previous error message**
+    setStoreNameError('');
 
     const jwt = localStorage.getItem('jwt');
     try {
       await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', {
         storeName: userData.storeName,
         category: userData.category,
-        packageType: userData.packageType,
+        packageType: packageType, // Use updated packageType state here
       }, {
         headers: {
           'Authorization': `Bearer ${jwt}`
@@ -106,8 +88,7 @@ function Profile() {
       const storeNameTurkishCharacters = /[ğüşıöçĞÜŞİÖÇ]/;
       const storeNameDoubleSpaces = /\s{2,}/;
       const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
-    
-      // Store name validation
+
       if (storeName.length < 3 || storeName.length > 20) {
         setStoreNameError('Store Name must be between 3 and 20 characters.');
       } else if (storeNameTurkishCharacters.test(storeName)) {
@@ -153,7 +134,7 @@ function Profile() {
   return (
     <div className="background">
       <Navbar />
-      <div className="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+      <div className="container mt-5 border" style={{ maxHeight: '350px', minHeight: '350px',width: '1000px' }}>
         <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
         <Form className="bg-light p-5 mt-3 rounded" style={{ height: '200px' }}>
           <Row>
@@ -166,7 +147,7 @@ function Profile() {
                   value={userData.storeName}
                   onChange={handleInputChange}
                   placeholder={userData.storeName}
-                  isInvalid={!!storeNameError} // **Bootstrap validation class**
+                  isInvalid={!!storeNameError}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }}>
                   {storeNameError}
@@ -189,7 +170,7 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+      <div className="container mt-1 border" style={{ maxHeight: '350px',  minHeight: '350px',width: '1000px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Password Update
         </h2>
@@ -233,68 +214,68 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container p-5 mt-5 border" style={{  width: '1000px', maxHeight:'500px' }}>
+      <div className="container mt-1 border" style={{ width: '1000px', maxHeight: '350px', minHeight: '350px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Package Type
         </h2>
-        <Form className=" p-5 mt-3 rounded" style={{ height: '240px' }}>
-        <Row className="mb-4">
-              {packageData.map((pkg) => (
-                <Col md={4} key={pkg.value}>
-                  <div
-                    className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
-                    onClick={() => setPackageType(pkg.value)}
+        <Form className=" mt-5 rounded" style={{ height: '240px' }}>
+          <Row className="mb-4">
+            {packageData.map((pkg) => (
+              <Col md={4} key={pkg.value}>
+                <div
+                  className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
+                  onClick={() => setPackageType(pkg.value)}
+                >
+                  <Form.Check
+                    type="radio"
+                    value={pkg.value}
+                    checked={packageType === pkg.value}
+                    onChange={(e) => setPackageType(e.target.value)}
+                    id={pkg.value}
+                    name="package"
                   >
-                    <Form.Check
-                      type="radio"
-                      value={pkg.value}
-                      checked={packageType === pkg.value}
-                      onChange={(e) => setPackageType(e.target.value)}
-                      id={pkg.value}
-                      name="package"
-                    >
-                      <Form.Check.Input type="radio" className="d-none" />
-                      <Form.Check.Label>
-                        <div className="package-content">
-                          <h3>{pkg.title}</h3>
-                          <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
-                          <ul>
-                            {pkg.list && pkg.list.map((item, index) => (
-                              <li key={index}>
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </Form.Check.Label>
-                    </Form.Check>
-                  </div>
-                </Col>
-              ))}
-            </Row>
-          
+                    <Form.Check.Input type="radio" className="d-none" />
+                    <Form.Check.Label>
+                      <div className="package-content">
+                        <h3>{pkg.title}</h3>
+                        <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
+                        <ul>
+                          {pkg.list && pkg.list.map((item, index) => (
+                            <li key={index}>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </Form.Check.Label>
+                  </Form.Check>
+                </div>
+              </Col>
+            ))}
+          </Row>
         </Form>
       </div>
 
-      <div  className="container p-5 mt-5 border" style={{  width: '1000px', maxHeight:'500px' }}>
-        <Row>
-          <Col >
-            <Button variant="primary" onClick={handleUpdateProfile}>
+      <div className="container mt-5 border" style={{ width: '1000px', minHeight: '250px' }}>
+        <Row className="flex-column">
+          <Col className="mb-3">
+            <Button variant="primary" onClick={handleUpdateProfile} style={{ width: '100%' }}>
               Update Profile
             </Button>
-            </Col>
-            <Col>
-            <Button variant="secondary" onClick={handleLogout} >
+          </Col>
+          <Col className="mb-3">
+            <Button variant="secondary" onClick={handleLogout} style={{ width: '100%' }}>
               Logout
             </Button>
-            </Col>
-            <Col>
-            <Button variant="danger" onClick={handleDeleteAccount} >
+          </Col>
+          <Col>
+            <Button variant="danger" onClick={handleDeleteAccount} style={{ width: '100%' }}>
               Delete Account
             </Button>
-            </Col>
-            </Row>
+          </Col>
+        </Row>
       </div>
+
     </div>
   );
 }
