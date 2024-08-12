@@ -52,13 +52,13 @@ function Home() {
   }, [navigate]);
 
   const updatePluginStatus = async (pluginName, isActive) => {
-    if (pluginName === "Benim Sayfam" && isActive) {
-      console.log('"Benim Sayfam" eklentisi devre dışı bırakılamaz.');
+    if (pluginName === "My Page" && isActive) {
+      console.log('"My Page" eklentisi devre dışı bırakılamaz.');
       return;
     }
 
     const jwt = localStorage.getItem('jwt');
-    const activePluginCount = plugins.filter(plugin => plugin.active && plugin.name !== 'Benim Sayfam').length;
+    const activePluginCount = plugins.filter(plugin => plugin.active && plugin.name !== 'My Page').length;
 
     if ((userPackageType === 'SILVER' || userPackageType === 'GOLD') && activePluginCount >= 4 && !isActive) {
       console.log('Silver ve Gold paketlerde sadece 4 eklenti aktif olabilir.');
@@ -96,9 +96,9 @@ function Home() {
       let newErrorMessage = '';
       plugins.forEach(plugin => {
         const toggleButton = document.getElementById(`toggle-${plugin.name}`);
-        const activePluginCount = plugins.filter(p => p.active && p.name !== 'Benim Sayfam').length;
+        const activePluginCount = plugins.filter(p => p.active && p.name !== 'My Page').length;
 
-        if ((userPackageType === 'SILVER' || userPackageType === 'GOLD') && activePluginCount >= 4 && !plugin.active && plugin.name !== 'Benim Sayfam') {
+        if ((userPackageType === 'SILVER' || userPackageType === 'GOLD') && activePluginCount >= 4 && !plugin.active && plugin.name !== 'My Page') {
           newErrorMessage = 'Silver ve Gold paketlerde sadece 4 eklenti aktif olabilir.';
           setErrorMessage('You cannot activate more than 3 integrations. Change to Platinum to be able to active more than 3 integrations at the same time'); // Hata mesajını ayarla
 

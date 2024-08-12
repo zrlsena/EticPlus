@@ -49,7 +49,7 @@ const Login = () => {
         if (data.errorCode === 'USER_NOT_FOUND') {
           setStoreNameError('Invalid store name. Please check and try again.');
         }
-        if (data.errorCode === 'LOGIN_ERROR') {
+        if (data.errorCode === 'INVALID_CREDENTIALS') {
           setPasswordError('Invalid password. Please check and try again.');
         }
       } else {
