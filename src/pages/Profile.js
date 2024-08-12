@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import { Form, Button, Container, Col, Row, Alert } from 'react-bootstrap';
-import { width } from '@fortawesome/free-solid-svg-icons/fa0';
+import { packageData } from '../components/PackageData';
+
+import { Form, Button, Col, Row } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Profile() {
   const [userData, setUserData] = useState({
@@ -17,11 +19,8 @@ function Profile() {
   const [newPassword2, setNewPassword2] = useState('');
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [passwordError, setPasswordError] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState({
-    currentPassword: false,
-    newPassword1: false,
-    newPassword2: false
-  });
+  const [packageType, setPackageType] = useState(userData.packageType);
+  const [storeNameError, setStoreNameError] = useState(''); // **New state for storeName validation**
 
   const navigate = useNavigate();
 
@@ -32,17 +31,21 @@ function Profile() {
         navigate('/login');
         return;
       }
+
       try {
         const response = await axios.get('https://bilir-d108588758e4.herokuapp.com/api/profile', {
           headers: {
             'Authorization': `Bearer ${jwt}`
           }
         });
+
         setUserData({
           storeName: response.data.storeName,
           category: response.data.category,
-          packageType: response.data.packageType
+          packageType: response.data.packageType,
+          password: response.data.password
         });
+
       } catch (error) {
         console.error('Error fetching user data:', error);
         navigate('/login');
@@ -50,6 +53,7 @@ function Profile() {
         setLoading(false);
       }
     };
+
     fetchUserData();
   }, [navigate]);
 
@@ -62,12 +66,33 @@ function Profile() {
   };
 
   const handleUpdateProfile = async () => {
+    const { storeName } = userData;
+    const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
+    const storeNameTurkishCharacters = /[ğüşıöçĞÜŞİÖÇ]/;
+    const storeNameDoubleSpaces = /\s{2,}/;
+    const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
+
+    // **Validation check**
+    if (
+      storeName !== userData.storeName && 
+      (storeName.length < 3 || storeName.length > 20 ||
+      storeNameInvalidCharacters.test(storeName) ||
+      storeNameTurkishCharacters.test(storeName) ||
+      storeNameDoubleSpaces.test(storeName) ||
+      !storeNameNoLeadingOrTrailingSpaces.test(storeName))
+    ) {
+      setStoreNameError('Store name must be 3-20 characters long, contain no special characters or Turkish characters, no double spaces, and no leading/trailing spaces.');
+      return;
+    }
+
+    setStoreNameError(''); // **Clear any previous error message**
+
     const jwt = localStorage.getItem('jwt');
     try {
       await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', {
         storeName: userData.storeName,
         category: userData.category,
-        packageType: userData.packageType
+        packageType: userData.packageType,
       }, {
         headers: {
           'Authorization': `Bearer ${jwt}`
@@ -76,42 +101,28 @@ function Profile() {
       alert('Profile updated successfully');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('An error occurred while updating the profile.');
+      const { storeName } = userData;
+      const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
+      const storeNameTurkishCharacters = /[ğüşıöçĞÜŞİÖÇ]/;
+      const storeNameDoubleSpaces = /\s{2,}/;
+      const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
+    
+      // Store name validation
+      if (storeName.length < 3 || storeName.length > 20) {
+        setStoreNameError('Store Name must be between 3 and 20 characters.');
+      } else if (storeNameTurkishCharacters.test(storeName)) {
+        setStoreNameError('Store name should not contain Turkish characters.');
+      } else if (storeNameInvalidCharacters.test(storeName)) {
+        setStoreNameError('Store Name must not contain special characters.');
+      } else if (storeNameDoubleSpaces.test(storeName)) {
+        setStoreNameError('Store Name must not contain consecutive spaces.');
+      } else if (!storeNameNoLeadingOrTrailingSpaces.test(storeName)) {
+        setStoreNameError('Store Name must not have spaces at the beginning or end.');
+      } else {
+        setStoreNameError('An error occurred while updating the profile. Please try again later.');
+      }
     }
   };
-
-  const handleUpdatePassword = async () => {
-    if (newPassword1 !== newPassword2) {
-      setPasswordMatch(false);
-      setPasswordError('New passwords do not match.');
-      return;
-    }
-    setPasswordMatch(true);
-    setPasswordError('');
-
-    console.log('Current Password:', currentPassword);
-    console.log('New Password:', newPassword1);
-
-    const jwt = localStorage.getItem('jwt');
-    try {
-      await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updatePassword', {
-        currentPassword: currentPassword,
-        newPassword: newPassword1
-      }, {
-        headers: {
-          'Authorization': `Bearer ${jwt}`
-        }
-      });
-      alert('Password updated successfully');
-      setCurrentPassword('');
-      setNewPassword1('');
-      setNewPassword2('');
-    } catch (error) {
-      console.error('Error updating password:', error.response ? error.response.data : error.message);
-      alert('An error occurred while updating the password.');
-    }
-  };
-
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
@@ -139,19 +150,12 @@ function Profile() {
     return <div>Loading...</div>;
   }
 
-  const togglePasswordVisibility = (field) => {
-    setPasswordVisible({
-      ...passwordVisible,
-      [field]: !passwordVisible[field]
-    });
-  };
-
   return (
     <div className="background">
       <Navbar />
-      <div class="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
-        <h1 className="text-start " style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
-        <Form className="bg-light p-5 mt-3 rounded" style={{ height: '240px' }}>
+      <div className="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+        <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
+        <Form className="bg-light p-5 mt-3 rounded" style={{ height: '200px' }}>
           <Row>
             <Col>
               <Form.Group controlId="formStoreName" style={{ marginBottom: '15px' }}>
@@ -161,12 +165,16 @@ function Profile() {
                   name="storeName"
                   value={userData.storeName}
                   onChange={handleInputChange}
-                  placeholder="Store Name"
+                  placeholder={userData.storeName}
+                  isInvalid={!!storeNameError} // **Bootstrap validation class**
                 />
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }}>
+                  {storeNameError}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formCategory" >
+              <Form.Group controlId="formCategory">
                 <Form.Label className="custom-label">Category</Form.Label>
                 <Form.Control
                   type="text"
@@ -181,17 +189,17 @@ function Profile() {
         </Form>
       </div>
 
-      <div class="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
+      <div className="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Password Update
         </h2>
         <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '240px' }}>
           <Row>
-            <Col sm={6}  style={{ width: '360px', alignItems:'center', display:'grid' }}>
-              <Form.Group controlId="formCurrentPassword" >
+            <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
+              <Form.Group controlId="formCurrentPassword">
                 <Form.Label className="custom-label">Current Password</Form.Label>
                 <Form.Control
-                  type={passwordVisible.currentPassword ? "text" : "password"}
+                  type={"password"}
                   name="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
@@ -199,11 +207,11 @@ function Profile() {
                 />
               </Form.Group>
             </Col>
-            <Col sm={6} style={{ width: '360px' }} >
+            <Col sm={6} style={{ width: '360px' }}>
               <Form.Group controlId="formNewPassword1">
                 <Form.Label className="custom-label">New Password</Form.Label>
                 <Form.Control className='mb-3'
-                  type={passwordVisible.newPassword1 ? "text" : "password"}
+                  type={"password"}
                   name="newPassword1"
                   value={newPassword1}
                   onChange={(e) => setNewPassword1(e.target.value)}
@@ -213,7 +221,7 @@ function Profile() {
               <Form.Group controlId="formNewPassword2">
                 <Form.Label className="custom-label">Confirm New Password</Form.Label>
                 <Form.Control
-                  type={passwordVisible.newPassword2 ? "text" : "password"}
+                  type={"password"}
                   name="newPassword2"
                   value={newPassword2}
                   onChange={(e) => setNewPassword2(e.target.value)}
@@ -222,30 +230,70 @@ function Profile() {
               </Form.Group>
             </Col>
           </Row>
-          {!passwordMatch && (
-            <Alert variant="danger">
-              {passwordError}
-            </Alert>
-          )}
         </Form>
       </div>
 
+      <div className="container p-5 mt-5 border" style={{  width: '1000px', maxHeight:'500px' }}>
+        <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
+          Package Type
+        </h2>
+        <Form className=" p-5 mt-3 rounded" style={{ height: '240px' }}>
+        <Row className="mb-4">
+              {packageData.map((pkg) => (
+                <Col md={4} key={pkg.value}>
+                  <div
+                    className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
+                    onClick={() => setPackageType(pkg.value)}
+                  >
+                    <Form.Check
+                      type="radio"
+                      value={pkg.value}
+                      checked={packageType === pkg.value}
+                      onChange={(e) => setPackageType(e.target.value)}
+                      id={pkg.value}
+                      name="package"
+                    >
+                      <Form.Check.Input type="radio" className="d-none" />
+                      <Form.Check.Label>
+                        <div className="package-content">
+                          <h3>{pkg.title}</h3>
+                          <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
+                          <ul>
+                            {pkg.list && pkg.list.map((item, index) => (
+                              <li key={index}>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Form.Check.Label>
+                    </Form.Check>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          
+        </Form>
+      </div>
 
-      <div class="container p-5 mt-5 border" style={{ maxHeight: '350px', width: '1000px' }}>
-        <Container  className="bg-light p-5 mt-3 rounded" style={{ height: '240px' }}>
-          <div className="profile-actions mt-2">
-
-            <Button className='mt-4' variant="primary" onClick={handleUpdateProfile}>
+      <div  className="container p-5 mt-5 border" style={{  width: '1000px', maxHeight:'500px' }}>
+        <Row>
+          <Col >
+            <Button variant="primary" onClick={handleUpdateProfile}>
               Update Profile
             </Button>
-            <Button variant="secondary" onClick={handleLogout} className="me-2">
+            </Col>
+            <Col>
+            <Button variant="secondary" onClick={handleLogout} >
               Logout
             </Button>
-            <Button variant="danger" onClick={handleDeleteAccount} className="ml-2">
+            </Col>
+            <Col>
+            <Button variant="danger" onClick={handleDeleteAccount} >
               Delete Account
             </Button>
-          </div>
-        </Container>
+            </Col>
+            </Row>
       </div>
     </div>
   );

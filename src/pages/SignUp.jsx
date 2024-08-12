@@ -56,7 +56,7 @@ const SignUp = () => {
     if (storeName.length < 3 || storeName.length > 20) {
       setStoreNameError('Store Name must be between 3 and 20 characters.');
       isValid = false;
-    } else if (storeNameTurkishCharacters.test(storeName)) {
+    }  else if (storeNameTurkishCharacters.test(storeName)) {
       setStoreNameError('Store name should not contain Turkish characters.');
       isValid = false;
     } else if (storeNameInvalidCharacters.test(storeName)) {
