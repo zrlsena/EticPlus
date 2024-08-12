@@ -159,7 +159,7 @@ function Home() {
                         checked={plugin.active}
                         onChange={() => updatePluginStatus(plugin.name, plugin.active)}
                       />
-                      <span className="slider round"></span>
+                      <span className={`slider round ${plugin.active ? 'checked' : ''}`}></span>
                     </label>
                   </div>
                 </li>
