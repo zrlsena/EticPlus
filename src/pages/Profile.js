@@ -10,20 +10,20 @@ function Profile() {
   const [userData, setUserData] = useState({
     storeName: '',
     category: '',
-    packageType: '' 
+    packageType: ''
   });
   const [loading, setLoading] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword1, setNewPassword1] = useState('');
-  const [newPassword2, setNewPassword2] = useState('');
-  const [passwordMatch, setPasswordMatch] = useState(true);
-  const [passwordError, setPasswordError] = useState('');
-  const [packageType, setPackageType] = useState(''); 
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
+  const [currentPasswordValid, setCurrentPasswordValid] = useState(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
-  // New States for Category Dropdown
-  const [categories, setCategories] = useState([]); // List of categories
-  const [selectedCategory, setSelectedCategory] = useState(''); // Currently selected category
+  // State for category dropdown
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const navigate = useNavigate();
 
@@ -45,12 +45,12 @@ function Profile() {
         setUserData({
           storeName: response.data.storeName,
           category: response.data.category,
-          packageType: response.data.packageType, 
+          packageType: response.data.packageType,
           password: response.data.password
         });
 
-        setPackageType(response.data.packageType); 
-        setSelectedCategory(response.data.category); // Set default category
+        setPackageType(response.data.packageType);
+        setSelectedCategory(response.data.category);
 
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -63,14 +63,14 @@ function Profile() {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('https://bilir-d108588758e4.herokuapp.com/api/categories');
-        setCategories(response.data); // Fetch categories and set to state
+        setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
 
     fetchUserData();
-    fetchCategories(); // Fetch categories on mount
+    fetchCategories();
   }, [navigate]);
 
   const handleInputChange = (e) => {
@@ -81,21 +81,56 @@ function Profile() {
     });
   };
 
-  const handleUpdateProfile = async () => {
-    setStoreNameError('');
-
+  // Function to validate the current password
+  const validateCurrentPassword = async () => {
     const jwt = localStorage.getItem('jwt');
     try {
-      await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', {
-        storeName: userData.storeName,
-        category: selectedCategory, // Use selected category
-        packageType: packageType, // Use updated packageType state here
+      const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/profile', {
+        currentPassword,
       }, {
         headers: {
           'Authorization': `Bearer ${jwt}`
         }
       });
+
+      if (response.data.isValid) { // Assuming API returns an `isValid` boolean field
+        setCurrentPasswordValid(true);
+      } else {
+        setCurrentPasswordValid(false);
+      }
+    } catch (error) {
+      console.error('Error validating password:', error);
+      setCurrentPasswordValid(false);
+    }
+  };
+
+  
+  // Handle profile update
+  const handleUpdateProfile = async () => {
+    setStoreNameError('');
+
+    if (newPassword !== confirmNewPassword) {
+      alert('New passwords do not match.');
+      return;
+    }
+
+    const jwt = localStorage.getItem('jwt');
+    try {
+      await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', {
+        storeName: userData.storeName,
+        category: selectedCategory,
+        packageType: packageType,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        confirmNewPassword: confirmNewPassword
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`
+        }
+      });
       alert('Profile updated successfully');
+
     } catch (error) {
       console.error('Error updating profile:', error);
       const { storeName } = userData;
@@ -115,7 +150,7 @@ function Profile() {
       } else if (!storeNameNoLeadingOrTrailingSpaces.test(storeName)) {
         setStoreNameError('Store Name must not have spaces at the beginning or end.');
       } else {
-        setStoreNameError('An error occurred while updating the profile. Please try again later.');
+        
       }
     }
   };
@@ -149,12 +184,12 @@ function Profile() {
   return (
     <div className="background">
       <Navbar />
-      <div className="container mt-5 border" style={{ maxHeight: '350px', minHeight: '350px',width: '1000px' }}>
+      <div className="container mt-5 border" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
         <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
-        <Form className="bg-light p-5 mt-3 rounded" style={{ height: '200px' }}>
+        <Form className="bg-light p-5 mt-3 rounded  d-flex justify-content-center" style={{ height: '200px' }}>
           <Row>
             <Col>
-              <Form.Group controlId="formStoreName" style={{ marginBottom: '15px' }}>
+              <Form.Group controlId="formStoreName" style={{ marginBottom: '15px', width: '360px'}}>
                 <Form.Label className="custom-label">Store Name</Form.Label>
                 <Form.Control
                   type="text"
@@ -164,18 +199,18 @@ function Profile() {
                   placeholder={userData.storeName}
                   isInvalid={!!storeNameError}
                 />
-                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }}>
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px',width: '360px' }}>
                   {storeNameError}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formCategory">
+              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px', marginLeft:'30px' }}>
                 <Form.Label className="custom-label">Category</Form.Label>
                 <Form.Control
                   as="select"
-                  value={selectedCategory} // Use selectedCategory for dropdown
-                  onChange={(e) => setSelectedCategory(e.target.value)} // Update selectedCategory state on change
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
                   className="custom-placeholder"
                   style={{ fontSize: '0.9rem', height: '2.5rem' }}
                 >
@@ -192,42 +227,47 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-1 border" style={{ maxHeight: '350px',  minHeight: '350px',width: '1000px' }}>
+      <div className="container mt-1 border" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Password Update
         </h2>
         <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '240px' }}>
           <Row>
-            <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
+          <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
               <Form.Group controlId="formCurrentPassword">
                 <Form.Label className="custom-label">Current Password</Form.Label>
                 <Form.Control
-                  type={"password"}
+                  type="password"
                   name="currentPassword"
+                  id="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Current Password"
                 />
               </Form.Group>
             </Col>
-            <Col sm={6} style={{ width: '360px' }}>
-              <Form.Group controlId="formNewPassword1">
+          
+          <Col sm={6} style={{ width: '360px', marginLeft:'30px' }}>
+              <Form.Group controlId="formNewPassword">
                 <Form.Label className="custom-label">New Password</Form.Label>
                 <Form.Control className='mb-3'
-                  type={"password"}
-                  name="newPassword1"
-                  value={newPassword1}
-                  onChange={(e) => setNewPassword1(e.target.value)}
+                  type="password"
+                  name="newPassword"
+                  id="newPassword"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New Password"
                 />
               </Form.Group>
-              <Form.Group controlId="formNewPassword2">
+            
+              <Form.Group controlId="formConfirmNewPassword">
                 <Form.Label className="custom-label">Confirm New Password</Form.Label>
                 <Form.Control
-                  type={"password"}
-                  name="newPassword2"
-                  value={newPassword2}
-                  onChange={(e) => setNewPassword2(e.target.value)}
+                  type="password"
+                  name="confirmNewPassword"
+                  id="confirmNewPassword"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
                   placeholder="Confirm New Password"
                 />
               </Form.Group>
