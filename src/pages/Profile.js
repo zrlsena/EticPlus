@@ -21,9 +21,13 @@ function Profile() {
   const [currentPasswordValid, setCurrentPasswordValid] = useState(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [currentPasswordError, setCurrentPasswordError] = useState('');
-  const [passwordValidationError, setPasswordValidationError] = useState(''); 
+  const [passwordValidationErrors, setPasswordValidationErrors] = useState([]); // Add state for password validation errors
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -81,7 +85,32 @@ function Profile() {
     });
   };
 
-  
+  // Function to validate the current password
+  const validateCurrentPassword = async () => {
+    const jwt = localStorage.getItem('jwt');
+    try {
+      const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/profile', {
+        currentPassword,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        }
+      });
+
+      if (response.data.isValid) {
+        setCurrentPasswordValid(true);
+        setCurrentPasswordError('');
+      } else {
+        setCurrentPasswordValid(false);
+        setCurrentPasswordError(response.data.errorDesc);
+      }
+    } catch (error) {
+      console.error('Error validating password:', error);
+      setCurrentPasswordValid(false);
+    }
+  };
+
+  // Password validation criteria
   const passwordCriteria = [
     { regex: /.{4,15}/, message: 'Password must be between 4 and 15 characters.' },
     { regex: /[A-Z]/, message: 'Password must contain at least one uppercase letter.' },
@@ -91,23 +120,21 @@ function Profile() {
     { regex: /^\S*$/, message: 'Password must not contain spaces.' },
   ];
 
- 
+  // Function to validate the new password against criteria
   const validatePassword = (password) => {
-    for (const criteria of passwordCriteria) {
-      if (!criteria.regex.test(password)) {
-        return criteria.message; 
-      }
-    }
-    return '';
+    const errors = passwordCriteria
+      .filter(criteria => !criteria.regex.test(password))
+      .map(criteria => criteria.message);
+    return errors;
   };
 
   const handleUpdateProfile = async () => {
     setStoreNameError('');
 
-    
-    const validationError = validatePassword(newPassword);
-    setPasswordValidationError(validationError);
-    if (validationError) {
+    // Validate new password
+    const validationErrors = validatePassword(newPassword);
+    setPasswordValidationErrors(validationErrors);
+    if (validationErrors.length > 0) {
       return;
     }
 
@@ -157,12 +184,17 @@ function Profile() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = () => setShowLogoutModal(true);
+  const handleDeleteAccount = () => setShowDeleteModal(true);
+  const handleUpdateProfileClick = () => setShowUpdateModal(true);
+
+  const confirmLogout = () => {
     localStorage.removeItem('jwt');
     navigate('/login');
+    setShowLogoutModal(false);
   };
 
-  const handleDeleteAccount = async () => {
+  const confirmDeleteAccount = async () => {
     const jwt = localStorage.getItem('jwt');
     try {
       await axios.post('https://bilir-d108588758e4.herokuapp.com/api/deleteAccount', {
@@ -174,9 +206,15 @@ function Profile() {
       });
       localStorage.removeItem('jwt');
       navigate('/signup');
+      setShowDeleteModal(false);
     } catch (error) {
       console.error('Error deleting account:', error);
     }
+  };
+
+  const confirmUpdateProfile = () => {
+    handleUpdateProfile();
+    setShowUpdateModal(false);
   };
 
   if (loading) {
@@ -201,7 +239,7 @@ function Profile() {
                   placeholder={userData.storeName}
                   isInvalid={!!storeNameError}
                 />
-                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px', width: '360px' }} className='storeNameError'>
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px', width: '360px' }} className='storeError'>
                   {storeNameError}
                 </Form.Control.Feedback>
               </Form.Group>
@@ -263,10 +301,10 @@ function Profile() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New Password"
-                  isInvalid={!!passwordValidationError || !!confirmPasswordError} 
+                  isInvalid={passwordValidationErrors.length > 0 || !!confirmPasswordError} // Update this condition
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
-                  {passwordValidationError || confirmPasswordError} 
+                  {passwordValidationErrors.join(', ') || confirmPasswordError} {/* Display validation errors */}
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -350,6 +388,51 @@ function Profile() {
             </Button>
           </Col>
         </Row>
+
+        <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Logout</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to logout?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={confirmLogout}>
+              Logout
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Account Deletion</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete your account? This action cannot be undone.</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={confirmDeleteAccount}>
+              Delete Account
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Profile Update</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to update your profile?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowUpdateModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={confirmUpdateProfile}>
+              Update
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );
