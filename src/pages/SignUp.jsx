@@ -18,6 +18,11 @@ const SignUp = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
+  // State for modals
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
 
   useEffect(() => {
     const fetchCategories = async () => {

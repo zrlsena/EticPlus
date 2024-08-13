@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { packageData } from '../components/PackageData';
-import { Form, Button, Col, Row } from 'react-bootstrap';
+import { Form, Button, Col, Row, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Profile() {
@@ -20,8 +20,8 @@ function Profile() {
   const [storeNameError, setStoreNameError] = useState('');
   const [currentPasswordValid, setCurrentPasswordValid] = useState(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-
-  // State for category dropdown
+  const [currentPasswordError, setCurrentPasswordError] = useState('');
+  const [passwordValidationError, setPasswordValidationError] = useState(''); 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
 
@@ -81,36 +81,38 @@ function Profile() {
     });
   };
 
-  // Function to validate the current password
-  const validateCurrentPassword = async () => {
-    const jwt = localStorage.getItem('jwt');
-    try {
-      const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/profile', {
-        currentPassword,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${jwt}`
-        }
-      });
+  
+  const passwordCriteria = [
+    { regex: /.{4,15}/, message: 'Password must be between 4 and 15 characters.' },
+    { regex: /[A-Z]/, message: 'Password must contain at least one uppercase letter.' },
+    { regex: /[a-z]/, message: 'Password must contain at least one lowercase letter.' },
+    { regex: /\d/, message: 'Password must contain at least one digit.' },
+    { regex: /^[^ğüşıöçĞÜŞİÖÇ]+$/, message: 'Password must not contain Turkish characters.' },
+    { regex: /^\S*$/, message: 'Password must not contain spaces.' },
+  ];
 
-      if (response.data.isValid) { // Assuming API returns an `isValid` boolean field
-        setCurrentPasswordValid(true);
-      } else {
-        setCurrentPasswordValid(false);
+ 
+  const validatePassword = (password) => {
+    for (const criteria of passwordCriteria) {
+      if (!criteria.regex.test(password)) {
+        return criteria.message; 
       }
-    } catch (error) {
-      console.error('Error validating password:', error);
-      setCurrentPasswordValid(false);
     }
+    return '';
   };
 
-  
-  // Handle profile update
   const handleUpdateProfile = async () => {
     setStoreNameError('');
 
+    
+    const validationError = validatePassword(newPassword);
+    setPasswordValidationError(validationError);
+    if (validationError) {
+      return;
+    }
+
     if (newPassword !== confirmNewPassword) {
-      alert('New passwords do not match.');
+      setConfirmPasswordError('New passwords do not match.');
       return;
     }
 
@@ -150,7 +152,7 @@ function Profile() {
       } else if (!storeNameNoLeadingOrTrailingSpaces.test(storeName)) {
         setStoreNameError('Store Name must not have spaces at the beginning or end.');
       } else {
-        
+        setStoreNameError('An unknown error occurred.');
       }
     }
   };
@@ -184,12 +186,12 @@ function Profile() {
   return (
     <div className="background">
       <Navbar />
-      <div className="container mt-5 border" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
+      <div className="container mt-5" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
         <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
-        <Form className="bg-light p-5 mt-3 rounded  d-flex justify-content-center" style={{ height: '200px' }}>
+        <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '200px' }}>
           <Row>
             <Col>
-              <Form.Group controlId="formStoreName" style={{ marginBottom: '15px', width: '360px'}}>
+              <Form.Group controlId="formStoreName" style={{ marginBottom: '15px', width: '360px' }}>
                 <Form.Label className="custom-label">Store Name</Form.Label>
                 <Form.Control
                   type="text"
@@ -199,13 +201,13 @@ function Profile() {
                   placeholder={userData.storeName}
                   isInvalid={!!storeNameError}
                 />
-                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px',width: '360px' }}>
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px', width: '360px' }} className='storeNameError'>
                   {storeNameError}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px', marginLeft:'30px' }}>
+              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px', marginLeft: '30px' }}>
                 <Form.Label className="custom-label">Category</Form.Label>
                 <Form.Control
                   as="select"
@@ -227,13 +229,13 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-1 border" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
+      <div className="container mt-1" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Password Update
         </h2>
         <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '240px' }}>
           <Row>
-          <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
+            <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
               <Form.Group controlId="formCurrentPassword">
                 <Form.Label className="custom-label">Current Password</Form.Label>
                 <Form.Control
@@ -243,11 +245,15 @@ function Profile() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Current Password"
+                  isInvalid={currentPasswordValid === false}
                 />
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
+                  {currentPasswordError}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
-          
-          <Col sm={6} style={{ width: '360px', marginLeft:'30px' }}>
+
+            <Col sm={6} style={{ width: '360px', marginLeft: '30px' }}>
               <Form.Group controlId="formNewPassword">
                 <Form.Label className="custom-label">New Password</Form.Label>
                 <Form.Control className='mb-3'
@@ -257,9 +263,13 @@ function Profile() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New Password"
+                  isInvalid={!!passwordValidationError || !!confirmPasswordError} 
                 />
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
+                  {passwordValidationError || confirmPasswordError} 
+                </Form.Control.Feedback>
               </Form.Group>
-            
+
               <Form.Group controlId="formConfirmNewPassword">
                 <Form.Label className="custom-label">Confirm New Password</Form.Label>
                 <Form.Control
@@ -269,23 +279,27 @@ function Profile() {
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
                   placeholder="Confirm New Password"
+                  isInvalid={!!confirmPasswordError}
                 />
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
+                  {confirmPasswordError}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
         </Form>
       </div>
 
-      <div className="container mt-1 border" style={{ width: '1000px', maxHeight: '350px', minHeight: '350px' }}>
+      <div className="container mt-1" style={{ width: '1000px', maxHeight: '350px', minHeight: '350px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Package Type
         </h2>
-        <Form className=" mt-5 rounded" style={{ height: '240px' }}>
+        <Form className="mt-5 rounded" style={{ height: '240px' }}>
           <Row className="mb-4">
             {packageData.map((pkg) => (
               <Col md={4} key={pkg.value}>
                 <div
-                  className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
+                  className={`package-card p-3 rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
                   onClick={() => setPackageType(pkg.value)}
                 >
                   <Form.Check
@@ -318,7 +332,7 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-5 border" style={{ width: '1000px', minHeight: '250px' }}>
+      <div className="container mt-5" style={{ width: '1000px', maxHeight: '250px' }}>
         <Row className="flex-column">
           <Col className="mb-3">
             <Button variant="primary" onClick={handleUpdateProfile} style={{ width: '100%' }}>
@@ -337,7 +351,6 @@ function Profile() {
           </Col>
         </Row>
       </div>
-
     </div>
   );
 }
