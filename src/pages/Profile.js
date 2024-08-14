@@ -18,12 +18,11 @@ function Profile() {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [packageType, setPackageType] = useState('');
   const [storeNameError, setStoreNameError] = useState('');
-  const [currentPasswordValid, setCurrentPasswordValid] = useState(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  const [currentPasswordError, setCurrentPasswordError] = useState('');
   const [passwordValidationErrors, setPasswordValidationErrors] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [currentPasswordError, setCurrentPasswordError] = useState('');  // Add this line
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -51,7 +50,6 @@ function Profile() {
           storeName: response.data.storeName,
           category: response.data.category,
           packageType: response.data.packageType,
-          password: response.data.password
         });
 
         setPackageType(response.data.packageType);
@@ -59,7 +57,9 @@ function Profile() {
 
       } catch (error) {
         console.error('Error fetching user data:', error);
+        console.log(error);
         navigate('/login');
+        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -80,35 +80,10 @@ function Profile() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData({
-      ...userData,
+    setUserData((prevUserData) => ({
+      ...prevUserData,
       [name]: value
-    });
-  };
-
-  const validateCurrentPassword = async () => {
-    const jwt = localStorage.getItem('jwt');
-    try {
-      const response = await axios.post('https://bilir-d108588758e4.herokuapp.com/api/profile', {
-        currentPassword,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${jwt}`
-        }
-      });
-
-      if (response.data.isValid) {
-        setCurrentPasswordValid(true);
-        setCurrentPasswordError('');
-      } else {
-        setCurrentPasswordValid(false);
-        setCurrentPasswordError('Current password is incorrect.');
-      }
-    } catch (error) {
-      console.error('Error validating password:', error);
-      setCurrentPasswordValid(false);
-      setCurrentPasswordError('Failed to validate password. Please try again.');
-    }
+    }));
   };
 
   const passwordCriteria = [
@@ -129,70 +104,102 @@ function Profile() {
 
   const handleUpdateProfile = async () => {
     setStoreNameError('');
+    setCurrentPasswordError(''); 
 
-    const validationErrors = validatePassword(newPassword);
-    setPasswordValidationErrors(validationErrors);
-    if (validationErrors.length > 0) {
-      return;
-    }
+    const validateStoreName = (storeName) => {
+      const errors = [];
 
-    if (newPassword !== confirmNewPassword) {
-      setConfirmPasswordError('New passwords do not match.');
-      return;
-    }
-
-    await validateCurrentPassword();
-    if (currentPasswordValid === false) {
-      return;
-    }
-
-    const jwt = localStorage.getItem('jwt');
-    try {
-      await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', {
-        storeName: userData.storeName,
-        category: selectedCategory,
-        packageType: packageType,
-        currentPassword: currentPassword,
-        newPassword: newPassword,
-        confirmNewPassword: confirmNewPassword
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`
-        }
-      });
-      
-      setShowSuccessModal(true); 
-      setCurrentPasswordError('');
-      setConfirmPasswordError('');
-
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      const { storeName } = userData;
       const storeNameInvalidCharacters = /[^a-zA-Z0-9\s]/;
       const storeNameTurkishCharacters = /[ğüşıöçĞÜŞİÖÇ]/;
       const storeNameDoubleSpaces = /\s{2,}/;
       const storeNameNoLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
 
       if (storeName.length < 3 || storeName.length > 20) {
-        setStoreNameError('Store Name must be between 3 and 20 characters.');
-      } else if (storeNameTurkishCharacters.test(storeName)) {
-        setStoreNameError('Store name should not contain Turkish characters.');
-      } else if (storeNameInvalidCharacters.test(storeName)) {
-        setStoreNameError('Store Name must not contain special characters.');
-      } else if (storeNameDoubleSpaces.test(storeName)) {
-        setStoreNameError('Store Name must not contain consecutive spaces.');
-      } else if (!storeNameNoLeadingOrTrailingSpaces.test(storeName)) {
-        setStoreNameError('Store Name must not have spaces at the beginning or end.');
-      } else {
-        setStoreNameError('An unknown error occurred.');
+        errors.push('Mağaza Adı 3 ile 20 karakter arasında olmalıdır.');
+      }
+      if (storeNameTurkishCharacters.test(storeName)) {
+        errors.push('Mağaza adı Türkçe karakterler içermemelidir.');
+      }
+      if (storeNameInvalidCharacters.test(storeName)) {
+        errors.push('Mağaza Adı özel karakterler içermemelidir.');
+      }
+      if (storeNameDoubleSpaces.test(storeName)) {
+        errors.push('Mağaza Adı yan yana iki boşluk içermemelidir.');
+      }
+      if (!storeNameNoLeadingOrTrailingSpaces.test(storeName)) {
+        errors.push('Mağaza Adı başında veya sonunda boşluk olmamalıdır.');
+      }
+
+      return errors;
+    };
+
+    const storeNameErrors = validateStoreName(userData.storeName);
+    if (storeNameErrors.length > 0) {
+      setStoreNameError(storeNameErrors.join(', '));
+      return;
+    }
+
+    let passwordErrors = [];
+    if (newPassword || confirmNewPassword || currentPassword) {
+      passwordErrors = validatePassword(newPassword);
+      setPasswordValidationErrors(passwordErrors);
+
+      if (passwordErrors.length > 0 || newPassword !== confirmNewPassword) {
+        setConfirmPasswordError(newPassword !== confirmNewPassword ? 'Yeni şifreler uyuşmuyor.' : '');
+        return;
+      }
+    } else {
+      setPasswordValidationErrors([]);
+      setConfirmPasswordError('');
+    }
+
+    const jwt = localStorage.getItem('jwt');
+    const updateData = {
+      storeName: userData.storeName,
+      category: selectedCategory,
+      packageType: packageType,
+    };
+
+    if (newPassword && confirmNewPassword && currentPassword) {
+      updateData.currentPassword = currentPassword;
+      updateData.newPassword = newPassword;
+      updateData.confirmNewPassword = confirmNewPassword;
+    }
+
+    try {
+      await axios.put('https://bilir-d108588758e4.herokuapp.com/api/updateProfile', updateData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`
+        }
+      });
+
+      setShowSuccessModal(true);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      setStoreNameError('');
+      setCurrentPasswordError(''); 
+      navigate('/home');
+
+
+    } catch (error) {
+      console.error('Profil güncellenirken hata oluştu:', error);
+      
+      if (error.response && error.response.data.errorCode === "STORE_NAME_EXISTS") {
+        setStoreNameError('Store name already exists.');
+      } 
+      else if (error.response && error.response.data.errorCode === "INVALID_CURRENT_PASSWORD") {
+        setCurrentPasswordError('Current password is incorrect.');
+      } 
+      else {
+        setStoreNameError('Bilinmeyen bir hata oluştu.');
       }
     }
   };
 
   const handleLogout = () => setShowLogoutModal(true);
   const handleDeleteAccount = () => setShowDeleteModal(true);
-  const handleUpdateProfileClick = () => setShowUpdateModal(true);
 
   const confirmLogout = () => {
     localStorage.removeItem('jwt');
@@ -217,12 +224,6 @@ function Profile() {
       console.error('Error deleting account:', error);
     }
   };
-
-  const confirmUpdateProfile = () => {
-    handleUpdateProfile();
-    setShowUpdateModal(false);
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -290,12 +291,11 @@ function Profile() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Current password"
-                  isInvalid={currentPasswordValid === false}
+                  isInvalid={!!passwordValidationErrors.length || !!currentPasswordError}
                   style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
-
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='currentpasswordError'>
-                  {currentPasswordError}
+                  {passwordValidationErrors.join(', ') || currentPasswordError}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
@@ -310,9 +310,8 @@ function Profile() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New password"
-                  isInvalid={passwordValidationErrors.length > 0 || !!confirmPasswordError}
-                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'#F0F0F0',fontSize:'18px'}}
-
+                  isInvalid={!!passwordValidationErrors.length || !!confirmPasswordError}
+                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
                   {passwordValidationErrors.join(', ') || confirmPasswordError}
@@ -330,7 +329,6 @@ function Profile() {
                   placeholder="Confirm new password"
                   isInvalid={!!confirmPasswordError}
                   style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
-
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
                   {confirmPasswordError}
@@ -341,11 +339,12 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-1" style={{ width: '1000px', maxHeight: '450px', minHeight: '400px'}}>
+      {/* Package Type Section */}
+      <div className="container mt-1 border" style={{ width: '1000px', maxHeight: '350px', minHeight: '350px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Package Type
         </h2>
-        <Form className="mt-5 rounded"  >
+        <Form className=" mt-5 rounded" style={{ height: '240px' }}>
           <Row className="mb-4">
             {packageData.map((pkg) => (
               <Col md={4} key={pkg.value} >
@@ -404,6 +403,9 @@ function Profile() {
           </Col>
         </Row>
 
+        
+
+        {/* Logout Modal */}
         <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Logout</Modal.Title>
@@ -419,6 +421,7 @@ function Profile() {
           </Modal.Footer>
         </Modal>
 
+        {/* Delete Account Modal */}
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Account Deletion</Modal.Title>
@@ -434,6 +437,7 @@ function Profile() {
           </Modal.Footer>
         </Modal>
 
+        {/* Update Profile Modal */}
         <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Profile Update</Modal.Title>
@@ -443,11 +447,23 @@ function Profile() {
             <Button variant="secondary" onClick={() => setShowUpdateModal(false)}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={confirmUpdateProfile}>
+            <Button variant="primary" onClick={handleUpdateProfile}>
               Update
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Your profile has been successfully updated.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </div>
     </div>
   );
