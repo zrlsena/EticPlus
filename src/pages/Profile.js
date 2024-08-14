@@ -21,13 +21,14 @@ function Profile() {
   const [currentPasswordValid, setCurrentPasswordValid] = useState(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [currentPasswordError, setCurrentPasswordError] = useState('');
-  const [passwordValidationErrors, setPasswordValidationErrors] = useState([]); // Add state for password validation errors
+  const [passwordValidationErrors, setPasswordValidationErrors] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -85,7 +86,6 @@ function Profile() {
     });
   };
 
-  // Function to validate the current password
   const validateCurrentPassword = async () => {
     const jwt = localStorage.getItem('jwt');
     try {
@@ -102,15 +102,15 @@ function Profile() {
         setCurrentPasswordError('');
       } else {
         setCurrentPasswordValid(false);
-        setCurrentPasswordError(response.data.errorDesc);
+        setCurrentPasswordError('Current password is incorrect.');
       }
     } catch (error) {
       console.error('Error validating password:', error);
       setCurrentPasswordValid(false);
+      setCurrentPasswordError('Failed to validate password. Please try again.');
     }
   };
 
-  // Password validation criteria
   const passwordCriteria = [
     { regex: /.{4,15}/, message: 'Password must be between 4 and 15 characters.' },
     { regex: /[A-Z]/, message: 'Password must contain at least one uppercase letter.' },
@@ -120,7 +120,6 @@ function Profile() {
     { regex: /^\S*$/, message: 'Password must not contain spaces.' },
   ];
 
-  // Function to validate the new password against criteria
   const validatePassword = (password) => {
     const errors = passwordCriteria
       .filter(criteria => !criteria.regex.test(password))
@@ -131,7 +130,6 @@ function Profile() {
   const handleUpdateProfile = async () => {
     setStoreNameError('');
 
-    // Validate new password
     const validationErrors = validatePassword(newPassword);
     setPasswordValidationErrors(validationErrors);
     if (validationErrors.length > 0) {
@@ -140,6 +138,11 @@ function Profile() {
 
     if (newPassword !== confirmNewPassword) {
       setConfirmPasswordError('New passwords do not match.');
+      return;
+    }
+
+    await validateCurrentPassword();
+    if (currentPasswordValid === false) {
       return;
     }
 
@@ -158,7 +161,10 @@ function Profile() {
           'Authorization': `Bearer ${jwt}`
         }
       });
-      alert('Profile updated successfully');
+      
+      setShowSuccessModal(true); 
+      setCurrentPasswordError('');
+      setConfirmPasswordError('');
 
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -226,11 +232,11 @@ function Profile() {
       <Navbar />
       <div className="container mt-5" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
         <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
-        <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '200px' }}>
+        <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" >
           <Row>
             <Col>
               <Form.Group controlId="formStoreName" style={{ marginBottom: '15px', width: '360px' }}>
-                <Form.Label className="custom-label">Store Name</Form.Label>
+                <Form.Label className="custom-label mb-1" style={{fontSize: '16px'}}>Store Name</Form.Label>
                 <Form.Control
                   type="text"
                   name="storeName"
@@ -238,6 +244,7 @@ function Profile() {
                   onChange={handleInputChange}
                   placeholder={userData.storeName}
                   isInvalid={!!storeNameError}
+                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px', width: '360px' }} className='storeError'>
                   {storeNameError}
@@ -245,14 +252,14 @@ function Profile() {
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px', marginLeft: '30px' }}>
-                <Form.Label className="custom-label">Category</Form.Label>
+              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px' }}>
+                <Form.Label className="custom-label mb-1" style={{fontSize: '16px'}}>Category</Form.Label>
                 <Form.Control
                   as="select"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="custom-placeholder"
-                  style={{ fontSize: '0.9rem', height: '2.5rem' }}
+                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
                 >
                   <option value="">Select a store category</option>
                   {categories.map((category) => (
@@ -267,57 +274,63 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-1" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
+      <div className="container mt-1" style={{ maxHeight: '450px', minHeight: '350px', width: '1000px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Password Update
         </h2>
-        <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" style={{ height: '240px' }}>
-          <Row>
+        <Form className="bg-light p-5 mt-3  d-flex justify-content-center" >
+          <Row style={{ gap:'20px' }} >
             <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
-              <Form.Group controlId="formCurrentPassword">
-                <Form.Label className="custom-label">Current Password</Form.Label>
+              <Form.Group controlId="formCurrentPassword" >
+                <Form.Label className="custom-label mb-1" style={{fontSize: '16px'}} >Current Password</Form.Label>
                 <Form.Control
                   type="password"
                   name="currentPassword"
                   id="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Current Password"
+                  placeholder="Current password"
                   isInvalid={currentPasswordValid === false}
+                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
+
                 />
-                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
+                <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='currentpasswordError'>
                   {currentPasswordError}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
 
-            <Col sm={6} style={{ width: '360px', marginLeft: '30px' }}>
+            <Col sm={6} >
               <Form.Group controlId="formNewPassword">
-                <Form.Label className="custom-label">New Password</Form.Label>
+                <Form.Label className="custom-label mb-1" style={{fontSize: '16px'}}>New Password</Form.Label>
                 <Form.Control className='mb-3'
                   type="password"
                   name="newPassword"
                   id="newPassword"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="New Password"
-                  isInvalid={passwordValidationErrors.length > 0 || !!confirmPasswordError} // Update this condition
+                  placeholder="New password"
+                  isInvalid={passwordValidationErrors.length > 0 || !!confirmPasswordError}
+                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'#F0F0F0',fontSize:'18px'}}
+
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
-                  {passwordValidationErrors.join(', ') || confirmPasswordError} {/* Display validation errors */}
+                  {passwordValidationErrors.join(', ') || confirmPasswordError}
                 </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group controlId="formConfirmNewPassword">
-                <Form.Label className="custom-label">Confirm New Password</Form.Label>
+                <Form.Label className="custom-label mb-1" style={{fontSize: '16px'}}>Confirm New Password</Form.Label>
                 <Form.Control
                   type="password"
                   name="confirmNewPassword"
                   id="confirmNewPassword"
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  placeholder="Confirm New Password"
+                  placeholder="Confirm new password"
                   isInvalid={!!confirmPasswordError}
+                  style={{borderRadius:'16px',height:'42px',width:'360px',color:'grey',fontSize:'18px'}}
+
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
                   {confirmPasswordError}
@@ -328,17 +341,18 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-1" style={{ width: '1000px', maxHeight: '350px', minHeight: '350px' }}>
+      <div className="container mt-1" style={{ width: '1000px', maxHeight: '450px', minHeight: '400px'}}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Package Type
         </h2>
-        <Form className="mt-5 rounded" style={{ height: '240px' }}>
+        <Form className="mt-5 rounded"  >
           <Row className="mb-4">
             {packageData.map((pkg) => (
-              <Col md={4} key={pkg.value}>
+              <Col md={4} key={pkg.value} >
                 <div
                   className={`package-card p-3 rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
                   onClick={() => setPackageType(pkg.value)}
+                  style={{height:'310px'}}
                 >
                   <Form.Check
                     type="radio"
@@ -347,15 +361,16 @@ function Profile() {
                     onChange={(e) => setPackageType(e.target.value)}
                     id={pkg.value}
                     name="package"
+                    
                   >
                     <Form.Check.Input type="radio" className="d-none" />
-                    <Form.Check.Label>
-                      <div className="package-content">
-                        <h3>{pkg.title}</h3>
-                        <p dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
-                        <ul>
+                    <Form.Check.Label >
+                      <div className="package-content" >
+                        <h3 style={{fontSize:'18px',marginTop:'15px'}}>{pkg.title}</h3>
+                        <p style={{fontSize:'14px'}} dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
+                        <ul >
                           {pkg.list && pkg.list.map((item, index) => (
-                            <li key={index}>
+                            <li style={{fontSize:'16px'}} key={index}>
                               {item}
                             </li>
                           ))}
@@ -373,17 +388,17 @@ function Profile() {
       <div className="container mt-5" style={{ width: '1000px', maxHeight: '250px' }}>
         <Row className="flex-column">
           <Col className="mb-3">
-            <Button variant="primary" onClick={handleUpdateProfile} style={{ width: '100%' }}>
+            <Button variant="primary" onClick={handleUpdateProfile} style={{ width: '100%',height:'42px',fontSize:'18px',borderRadius:'16px' }}>
               Update Profile
             </Button>
           </Col>
           <Col className="mb-3">
-            <Button variant="secondary" onClick={handleLogout} style={{ width: '100%' }}>
+            <Button variant="secondary" onClick={handleLogout} style={{ width: '100%',height:'42px',fontSize:'18px',borderRadius:'16px' }}>
               Logout
             </Button>
           </Col>
           <Col>
-            <Button variant="danger" onClick={handleDeleteAccount} style={{ width: '100%' }}>
+            <Button variant="danger" onClick={handleDeleteAccount} style={{ width: '100%',height:'42px',fontSize:'18px',borderRadius:'16px' }}>
               Delete Account
             </Button>
           </Col>

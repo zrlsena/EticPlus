@@ -131,11 +131,12 @@ function Home() {
             flexDirection: 'column',
             position: 'relative',
           }}>
-          <h2 className="text-start mb-3 mt-4" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Integrations </h2>
+
+          <h2 className="text-start mb-3 mt-4" style={{ width: '90%', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Integrations </h2>
 
 
 
-          <ul className="list-group" style={{ border: '4px solid #007AFF', borderRadius: '36px', width: '1000px', position: 'relative' }}>
+          <ul className="list-group" style={{ border: '4px solid #007AFF', borderRadius: '36px', width: '90%', position: 'relative' }}>
             <img src="/images/home.png" class="float-end" alt="Etic PLUS Logo" style={{ position: 'absolute', top: '-122px', right: '40px', width: '80px', }} />
 
             {plugins.length > 0 ? (
