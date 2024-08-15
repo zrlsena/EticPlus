@@ -157,7 +157,7 @@ const SignUp = () => {
           </div>
 
           <Form onSubmit={handleSignUp} className="sign-form bg-light p-4 rounded" style={{ backgroundColor: '' }} noValidate>
-            <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px' }}>Sign Up</h1>
+            <h1 className="mb-1 text-center fs-2" style={{ marginTop: '20px', fontWeight:'bold' }}>Sign Up</h1>
 
             <Row className="mb-0">
               <Col md={6}>
@@ -172,6 +172,7 @@ const SignUp = () => {
                     placeholder="Between 3 and 20 characters"
                     isInvalid={!!storeNameError}
                     className="custom-placeholder"
+                    style={{borderRadius:'16px'}}
                   />
                   <Form.Control.Feedback type="invalid" className='storeNameError'>
                     {storeNameError}
@@ -191,6 +192,7 @@ const SignUp = () => {
                     placeholder="Create strong password"
                     isInvalid={!!passwordError}
                     className="custom-placeholder"
+                    style={{borderRadius:'16px'}}
                   />
                   <Form.Control.Feedback type="invalid" className='passwordError'>
                     {passwordError}
@@ -207,7 +209,7 @@ const SignUp = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 isInvalid={!!categoryError}
                 className="custom-placeholder"
-                style={{ fontSize: '0.9rem', height: '2.5rem' }}
+                style={{ fontSize: '0.9rem', height: '2.5rem', borderRadius:'16px', width:'100%'}}
               >
                 <option value="">Select a store category</option>
                 {categories.map((category) => (
@@ -231,6 +233,7 @@ const SignUp = () => {
                   <div
                     className={`package-card p-3 border rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
                     onClick={() => setPackageType(pkg.value)}
+                    style={{borderRadius:'20px'}}
                   >
                     <Form.Check
                       type="radio"
@@ -262,7 +265,7 @@ const SignUp = () => {
 
 
             <Button
-              style={{ backgroundColor: '#17CC82', borderColor: 'transparent' }}
+              style={{ backgroundColor: '#17CC82', borderColor: 'transparent',borderRadius:'16px' }}
               type="submit"
               className="btn btn-primary w-100 mb-3"
             >
@@ -273,7 +276,7 @@ const SignUp = () => {
             </p>
           </Form>
 
-          <Modal show={showSuccessModal} onHide={handleModalClose} class="modal-dialog modal-fullscreen">
+          <Modal show={showSuccessModal} onHide={handleModalClose} className="modal-dialog modal-fullscreen">
             <Modal.Header closeButton style={{ backgroundColor: '#17CC82' }}>
               <Modal.Title>Success!</Modal.Title>
             </Modal.Header>

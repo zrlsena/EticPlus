@@ -189,7 +189,7 @@ function Profile() {
   return (
     <div className="background">
       <Navbar />
-      <div className="container mt-5" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px' }}>
+      <div className="container" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px', marginTop:'130px' }}>
         <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
         <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" >
           <Row>
@@ -243,6 +243,8 @@ function Profile() {
                   id="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
+                  minLength="4"
+                    maxLength="15"
                   placeholder="Current password"
                   isInvalid={currentPassword && !!currentPasswordError} // Display only if there's input
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
@@ -262,13 +264,18 @@ function Profile() {
                   id="newPassword"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
+                  minLength="4"
+                    maxLength="15"
                   placeholder="New password"
                   isInvalid={!!passwordValidationErrors.length && newPassword} // Display only if there's input
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
-                  {passwordValidationErrors.join(', ')}
-                </Form.Control.Feedback>
+  {passwordValidationErrors.map((error, index) => (
+    <div key={index}>{error}</div>
+  ))}
+</Form.Control.Feedback>
+
               </Form.Group>
 
               <Form.Group controlId="formConfirmNewPassword">
@@ -279,6 +286,8 @@ function Profile() {
                   id="confirmNewPassword"
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  minLength="4"
+                    maxLength="15"
                   placeholder="Confirm new password"
                   isInvalid={confirmNewPassword && !!confirmPasswordError} // Display only if there's input
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
@@ -292,7 +301,7 @@ function Profile() {
         </Form>
       </div>
 
-      {/* Package Type Section */}
+     
       <div className="container mt-1" style={{ width: '1000px', maxHeight: '450px', minHeight: '400px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Package Type
@@ -304,7 +313,7 @@ function Profile() {
                 <div
                   className={`package-card p-3 rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
                   onClick={() => setPackageType(pkg.value)}
-                  style={{ height: '310px' }}
+                  style={{ height: '310px', borderRadius:'40px' }}
                 >
                   <Form.Check
                     type="radio"
@@ -336,7 +345,7 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-5" style={{ width: '1000px', maxHeight: '250px' }}>
+      <div className="container mt-5" style={{ width: '1000px', maxHeight: '250px',marginTop:'10px' }}>
         <Row className="flex-column">
           <Col className="mb-3">
             <Button variant="primary" onClick={() => setShowUpdateModal(true)} style={{ width: '100%', height: '42px', fontSize: '18px', borderRadius: '16px' }}>
@@ -355,7 +364,6 @@ function Profile() {
           </Col>
         </Row>
 
-        {/* Logout Modal */}
         <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Logout</Modal.Title>
@@ -371,7 +379,6 @@ function Profile() {
           </Modal.Footer>
         </Modal>
 
-        {/* Delete Account Modal */}
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Account Deletion</Modal.Title>
@@ -387,7 +394,6 @@ function Profile() {
           </Modal.Footer>
         </Modal>
 
-        {/* Update Profile Modal */}
         <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Profile Update</Modal.Title>
@@ -418,6 +424,8 @@ function Profile() {
           </Modal.Footer>
         </Modal>
       </div>
+
+      
     </div>
   );
 }

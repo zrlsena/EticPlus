@@ -62,8 +62,6 @@ a {
   background-size: cover; 
   z-index: -1; 
   overflow: auto;
-  
-  
 }
 .p-2-5 {
   padding: 50px; 
@@ -348,7 +346,7 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .background {
@@ -359,6 +357,7 @@ input:checked + .slider:before {
     display: flex;
     width: 100%;
     height: 100%;
+    overflow: auto;
   }
 
   .sign-page .logo {
@@ -381,7 +380,7 @@ input:checked + .slider:before {
     margin-top: 10px; 
     background-color: #FFFEFC;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: auto;
   }
 
   .sign-form .input input {
@@ -422,8 +421,7 @@ input:checked + .slider:before {
     height: 90%;
     background-color: #FFFEFC;
     box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: auto;
 
   }
   .sign-form h1 {
@@ -454,7 +452,7 @@ input:checked + .slider:before {
 
   .dropdown {
     position: relative;
-    width: 300px;
+    
     margin-top: 20px;
   }
 
@@ -492,6 +490,7 @@ input:checked + .slider:before {
     box-sizing: border-box;
     margin-inline-end: 40px;
     margin-inline-start: 40px;
+    
 
   }
   
@@ -503,6 +502,7 @@ input:checked + .slider:before {
     border-radius: 24px;
     justify-content: center;
     padding-top: 0px;
+    margin-top: 20px;
   }
   
 }
@@ -519,8 +519,7 @@ input:checked + .slider:before {
     height: 90%;
     background-color: #FFFEFC;
     box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: auto;
 
   }
 
@@ -536,6 +535,7 @@ input:checked + .slider:before {
     padding: 0px;
     justify-content: center;
     align-items: center;
+    overflow: auto;
 }
 
   .sign-form .input {
@@ -598,6 +598,7 @@ input:checked + .slider:before {
     gap: 10px;
     display: flex;
     box-sizing: border-box;
+   
   }
 
   .package h1 {

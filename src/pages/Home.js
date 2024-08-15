@@ -121,7 +121,7 @@ function Home() {
   return (
     <div className="background" >
       <Navbar />
-      <div className="container mt-4">
+      <div className="container ">
         <div
           style={{
             display: 'flex',
@@ -130,6 +130,7 @@ function Home() {
             width: '100%',
             flexDirection: 'column',
             position: 'relative',
+            marginTop:'130px'
           }}>
 
           <h2 className="text-start mb-3 mt-4" style={{ width: '90%', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Integrations </h2>
@@ -137,7 +138,7 @@ function Home() {
 
 
           <ul className="list-group" style={{ border: '4px solid #007AFF', borderRadius: '36px', width: '90%', position: 'relative' }}>
-            <img src="/images/home.png" class="float-end" alt="Etic PLUS Logo" style={{ position: 'absolute', top: '-122px', right: '40px', width: '80px', }} />
+            <img src="/images/home.png" className="float-end" alt="Etic PLUS Logo" style={{ position: 'absolute', top: '-122px', right: '40px', width: '80px', }} />
 
             {plugins.length > 0 ? (
               plugins.map((plugin, index) => (

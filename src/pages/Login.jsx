@@ -83,7 +83,7 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleLogin} className="sign-form bg-light p-4 rounded">
-            <h1 className="text-center mb-4 fs-2" style={{ marginTop: '20px' }}>Sign In</h1>
+            <h1 className="text-center mb-4 fs-2" style={{ marginTop: '20px', fontWeight:'bold' }}>Sign In</h1>
 
             <div className="form-group mb-3">
               <Form.Label className="input-title">Store Name</Form.Label>
@@ -94,6 +94,7 @@ const Login = () => {
                 placeholder="Enter your store name"
                 isInvalid={!!storeNameError}
                 className="custom-placeholder"
+                style={{borderRadius:'16px'}}
               />
               <Form.Control.Feedback type="invalid" className='storeNameError'>
                 {storeNameError}
@@ -109,13 +110,14 @@ const Login = () => {
                 placeholder="Enter your password"
                 isInvalid={!!passwordError}
                 className="custom-placeholder"
+                style={{borderRadius:'16px'}}
               />
               <Form.Control.Feedback type="invalid" className='passwordError'>
                 {passwordError}
               </Form.Control.Feedback>
             </div>
 
-            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor: '#17CC82', borderColor: 'transparent' }} type="submit">
+            <button className="mt-5 btn btn-primary w-100 mb-3" style={{ backgroundColor: '#17CC82', borderColor: 'transparent',borderRadius:'16px' }} type="submit">
               Sign In
             </button>
 
