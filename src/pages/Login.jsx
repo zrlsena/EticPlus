@@ -45,6 +45,7 @@ const Login = () => {
         const jwt = data.jwt;
         localStorage.setItem('jwt', jwt);
         navigate('/home');
+        window.location.reload();
       } else if (response.status === 400) {
         if (data.errorCode === 'USER_NOT_FOUND') {
           setStoreNameError('Invalid store name. Please check and try again.');

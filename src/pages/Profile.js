@@ -159,6 +159,7 @@ function Profile() {
   const confirmLogout = () => {
     localStorage.removeItem('jwt');
     navigate('/login');
+    window.location.reload();
     setShowLogoutModal(false);
   };
 
@@ -174,6 +175,7 @@ function Profile() {
       });
       localStorage.removeItem('jwt');
       navigate('/signup');
+      window.location.reload();
       setShowDeleteModal(false);
     } catch (error) {
       console.error('Error deleting account:', error);
