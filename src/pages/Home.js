@@ -9,6 +9,8 @@ function Home() {
   const [userPackageType, setUserPackageType] = useState('');
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+
 
 
   async function getHomePage() {
@@ -80,6 +82,17 @@ function Home() {
           )
         );
         console.log(`Plugin ${isActive ? 'deactivated' : 'activated'} successfully.`);
+
+
+        setToastMessage(`Plugin ${!isActive ? 'activated' : 'deactivated'} successfully.`);
+
+        console.log(toastMessage);
+
+      setTimeout(() => {
+        setToastMessage('');
+      }, 2000);
+
+
       } else {
         const errorData = await response.json();
         console.error('Error:', errorData);
@@ -118,6 +131,8 @@ function Home() {
     return <div>Loading...</div>;
   }
 
+
+
   return (
     <div className="background" >
       <Navbar />
@@ -130,7 +145,7 @@ function Home() {
             width: '100%',
             flexDirection: 'column',
             position: 'relative',
-            marginTop:'130px'
+            marginTop: '130px'
           }}>
 
           <h2 className="text-start mb-3 mt-4" style={{ width: '90%', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Integrations </h2>
@@ -172,20 +187,40 @@ function Home() {
           </ul>
 
           {errorMessage && (
-            <div className="alert alert-danger alert-dismissible fade show  mt-3" role="alert" style={{ width: '100%',height:'auto',marginLeft:'15px',paddingBottom:'0px',color:'white', maxWidth: '980px', margin: '0 auto', borderRadius: '28px', fontSize: '14px' , backgroundColor:'#EA493F' }}>
+            <div className="alert alert-danger alert-dismissible fade show  mt-3" role="alert" style={{ width: '100%', height: 'auto', marginLeft: '15px', paddingBottom: '0px', color: 'white', maxWidth: '980px', margin: '0 auto', borderRadius: '28px', fontSize: '14px', backgroundColor: '#EA493F' }}>
               <p>
-      You cannot activate more than 3 integrations.<br />
-      Change to <strong>Platinum </strong>to be able to activate more than 3 integrations at the same time.</p>
+                You cannot activate more than 3 integrations.<br />
+                Change to <strong>Platinum </strong>to be able to activate more than 3 integrations at the same time.</p>
               <button
                 type="button"
                 className="btn-close btn-close-white"
-                style={{ width: '8px', height: '8px', fontSize: '12px', marginRight:'10px',color:'white' }} 
+                style={{ width: '8px', height: '8px', fontSize: '12px', marginRight: '10px', color: 'white' }}
                 data-bs-dismiss="alert"
                 aria-label="Close"
                 onClick={() => setErrorMessage(false)}
               ></button>
             </div>
           )}
+
+{toastMessage && (
+  <div className="toast-message" style={{
+    position: 'fixed',
+    top: '20px',
+    right: '20px',
+    backgroundColor: '#28a745',  // Başarılı mesaj için yeşil arka plan
+    color: 'white',  // Metin rengi beyaz
+    padding: '10px 20px',  // İç boşluk
+    borderRadius: '5px',  // Yuvarlak köşeler
+    zIndex: 9999,  // Yüksek bir z-index değeri
+    opacity: 0.9,  // Hafif şeffaflık
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',  // Hafif gölge efekti
+    transition: 'opacity 0.5s ease-in-out',  // Geçiş animasyonu
+  }}>
+    {toastMessage}
+  </div>
+)}
+
+
         </div>
       </div>
 
