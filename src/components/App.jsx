@@ -44,11 +44,13 @@ function HomeRedirect() {
       if (!response.ok) {
         const data = await response.json();
         if (data.status === 500 && data.error === 'Internal Server Error') {
+          localStorage.removeItem('jwt');
           setServerError(true);
           navigate('/login');  
         }
       }
     } catch (error) {
+      localStorage.removeItem('jwt');
       setServerError(true);
       navigate('/login');  
     }
