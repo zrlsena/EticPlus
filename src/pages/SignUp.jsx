@@ -18,10 +18,6 @@ const SignUp = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
-  // State for modals
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
 
   useEffect(() => {
@@ -278,7 +274,7 @@ const SignUp = () => {
 
           <Modal show={showSuccessModal} onHide={handleModalClose} className="modal-dialog modal-fullscreen">
             <Modal.Header closeButton style={{ backgroundColor: '#17CC82' }}>
-              <Modal.Title>Success!</Modal.Title>
+              <Modal.Title style={{ color: '#fff' }}>Success!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               You have successfully signed up.

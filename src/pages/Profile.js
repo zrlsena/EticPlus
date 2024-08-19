@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -27,6 +27,9 @@ function Profile() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const passwordSectionRef = useRef(null);
+
 
   const navigate = useNavigate();
 
@@ -75,13 +78,7 @@ function Profile() {
     fetchCategories();
   }, [navigate]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      [name]: value
-    }));
-  };
+
 
   const passwordCriteria = [
     { regex: /.{4,15}/, message: 'Password must be between 4 and 15 characters.' },
@@ -102,13 +99,53 @@ function Profile() {
   const handleUpdateProfile = async () => {
     setCurrentPasswordError('');
 
+    if (
+      selectedCategory === userData.category &&
+      packageType === userData.packageType &&
+      !newPassword &&
+      !currentPassword
+    ) {
+      setToastMessage("You haven't made any changes!");
+      setTimeout(() => setToastMessage(''), 2000);
+
+      return;
+    }
+
+
+    if (newPassword && !currentPassword) {
+      setToastMessage('Enter your current password!');
+      setTimeout(() => setToastMessage(''), 2000);
+      passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+
+      return;
+    }
+
+
+    if (currentPassword && !newPassword) {
+      setToastMessage('Enter your new password!');
+      setTimeout(() => setToastMessage(''), 2000);
+      passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+
+      return;
+    }
+
+
+
+
+
+
     let passwordErrors = [];
     if (newPassword || confirmNewPassword || currentPassword) {
       passwordErrors = validatePassword(newPassword);
       setPasswordValidationErrors(passwordErrors);
+      passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+
 
       if (passwordErrors.length > 0 || newPassword !== confirmNewPassword) {
         setConfirmPasswordError(newPassword !== confirmNewPassword ? 'Passwords do not match.' : '');
+
+        passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+
         return;
       }
     } else {
@@ -141,9 +178,11 @@ function Profile() {
       setConfirmNewPassword('');
       setCurrentPasswordError('');
       setShowSuccessModal(true);
+      window.location.reload();
 
     } catch (error) {
       console.error('Error updating profile:', error);
+
 
       if (error.response && error.response.data.errorCode === "INVALID_CURRENT_PASSWORD") {
         setCurrentPasswordError('Current password is incorrect.');
@@ -182,16 +221,19 @@ function Profile() {
     }
   };
 
-  if (loading) {
+ /* if (loading) {
     return <div>Loading...</div>;
-  }
+  }*/
 
   return (
     <div className="background">
       <Navbar />
-      <div className="container" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px', marginTop:'130px' }}>
-        <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>Basic Information</h1>
+      <img src="/images/profile.png" className="float-end" alt="Etic PLUS " style={{ position: 'relative', top: '99px', right: '20%', width: '110px', }} />
+
+      <div className="container" style={{ maxHeight: '350px', minHeight: '350px', width: '1000px', marginTop: '150px' }} >
+        <h1 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }} >Basic Information</h1>
         <Form className="bg-light p-5 mt-3 rounded d-flex justify-content-center" >
+          
           <Row>
             <Col>
               <Form.Group controlId="formStoreName" style={{ marginBottom: '15px', width: '360px' }}>
@@ -206,7 +248,7 @@ function Profile() {
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px' }}>
+              <Form.Group controlId="formCategory" style={{ marginBottom: '15px', width: '360px' }} >
                 <Form.Label className="custom-label mb-1" style={{ fontSize: '16px' }}>Category</Form.Label>
                 <Form.Control
                   as="select"
@@ -217,7 +259,7 @@ function Profile() {
                 >
                   <option value="">Select a store category</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.name}>
+                    <option key={category.id} value={category.name} >
                       {category.name}
                     </option>
                   ))}
@@ -228,13 +270,32 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-1" style={{ maxHeight: '450px', minHeight: '420px', width: '1000px' }}>
+      {toastMessage && (
+        <div className="toast-message" style={{
+          position: 'fixed',
+          top: '100px',
+          right: '50px',
+          backgroundColor: 'red',
+          color: 'white',
+          padding: '10px 20px',
+          borderRadius: '5px',
+          zIndex: 9999,
+          opacity: 0.6,
+          boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+          transition: 'opacity 0.5s ease-in-out',
+        }}>
+          {toastMessage}
+        </div>
+      )}
+
+
+      <div className="container mt-1" style={{ maxHeight: '450px', minHeight: '420px', width: '1000px' }} ref={passwordSectionRef}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Password Update
         </h2>
         <Form className="bg-light p-5 mt-3 d-flex justify-content-center">
           <Row style={{ gap: '20px' }} >
-            <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }}>
+            <Col sm={6} style={{ width: '360px', alignItems: 'center', display: 'grid' }} >
               <Form.Group controlId="formCurrentPassword" >
                 <Form.Label className="custom-label mb-1" style={{ fontSize: '16px' }} >Current Password</Form.Label>
                 <Form.Control
@@ -244,7 +305,7 @@ function Profile() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   minLength="4"
-                    maxLength="15"
+                  maxLength="15"
                   placeholder="Current password"
                   isInvalid={currentPassword && !!currentPasswordError} // Display only if there's input
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
@@ -265,16 +326,16 @@ function Profile() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   minLength="4"
-                    maxLength="15"
+                  maxLength="15"
                   placeholder="New password"
                   isInvalid={!!passwordValidationErrors.length && newPassword} // Display only if there's input
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
-  {passwordValidationErrors.map((error, index) => (
-    <div key={index}>{error}</div>
-  ))}
-</Form.Control.Feedback>
+                  {passwordValidationErrors.map((error, index) => (
+                    <div key={index}>{error}</div>
+                  ))}
+                </Form.Control.Feedback>
 
               </Form.Group>
 
@@ -287,7 +348,7 @@ function Profile() {
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
                   minLength="4"
-                    maxLength="15"
+                  maxLength="15"
                   placeholder="Confirm new password"
                   isInvalid={confirmNewPassword && !!confirmPasswordError} // Display only if there's input
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
@@ -301,19 +362,19 @@ function Profile() {
         </Form>
       </div>
 
-     
+
       <div className="container mt-1" style={{ width: '1000px', maxHeight: '450px', minHeight: '400px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
           Package Type
         </h2>
-        <Form className=" mt-5 rounded" style={{ height: '240px' }}>
+        <Form className=" mt-3 rounded" style={{ height: '240px' }}>
           <Row className="mb-4">
             {packageData.map((pkg) => (
               <Col md={4} key={pkg.value} >
                 <div
                   className={`package-card p-3 rounded-5 ${pkg.value} ${packageType === pkg.value ? 'selected' : ''}`}
                   onClick={() => setPackageType(pkg.value)}
-                  style={{ height: '310px', borderRadius:'40px' }}
+                  style={{ height: '310px', borderRadius: '40px' }}
                 >
                   <Form.Check
                     type="radio"
@@ -326,7 +387,7 @@ function Profile() {
                     <Form.Check.Input type="radio" className="d-none" />
                     <Form.Check.Label >
                       <div className="package-content" >
-                        <h3 style={{ fontSize: '18px', marginTop: '15px',fontWeight:'bold' }}>{pkg.title}</h3>
+                        <h3 style={{ fontSize: '18px', marginTop: '15px', fontWeight: 'bold' }}>{pkg.title}</h3>
                         <p style={{ fontSize: '14px' }} dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
                         <ul>
                           {pkg.list && pkg.list.map((item, index) => (
@@ -345,7 +406,7 @@ function Profile() {
         </Form>
       </div>
 
-      <div className="container mt-5" style={{ width: '1000px', maxHeight: '250px',marginTop:'10px' }}>
+      <div className="container mt-5" style={{ width: '1000px', maxHeight: '250px', marginTop: '10px' }}>
         <Row className="flex-column">
           <Col className="mb-3">
             <Button variant="primary" onClick={() => setShowUpdateModal(true)} style={{ width: '100%', height: '42px', fontSize: '18px', borderRadius: '16px' }}>
@@ -412,9 +473,9 @@ function Profile() {
           </Modal.Footer>
         </Modal>
 
-        <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Success</Modal.Title>
+        <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} >
+          <Modal.Header closeButton style={{background:'#28a745'}}>
+            <Modal.Title style={{ color: '#fff' }}>Success</Modal.Title>
           </Modal.Header>
           <Modal.Body>Your profile has been successfully updated.</Modal.Body>
           <Modal.Footer>
@@ -425,7 +486,7 @@ function Profile() {
         </Modal>
       </div>
 
-      
+
     </div>
   );
 }

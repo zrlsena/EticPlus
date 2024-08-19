@@ -88,9 +88,9 @@ function Home() {
 
         console.log(toastMessage);
 
-      setTimeout(() => {
-        setToastMessage('');
-      }, 2000);
+        setTimeout(() => {
+          setToastMessage('');
+        }, 2000);
 
 
       } else {
@@ -202,23 +202,23 @@ function Home() {
             </div>
           )}
 
-{toastMessage && (
-  <div className="toast-message" style={{
-    position: 'fixed',
-    top: '150px',
-    right: '600px',
-    backgroundColor: '#28a745',  
-    color: 'white', 
-    padding: '10px 20px',  
-    borderRadius: '5px',  
-    zIndex: 9999,  
-    opacity: 0.8,  
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', 
-    transition: 'opacity 0.5s ease-in-out', 
-  }}>
-    {toastMessage}
-  </div>
-)}
+          {toastMessage && (
+            <div className="toast-message" style={{
+              position: 'fixed',
+              top: '100px',
+              right: '50px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              zIndex: 9999,
+              opacity: 0.8,
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+              transition: 'opacity 0.5s ease-in-out',
+            }}>
+              {toastMessage}
+            </div>
+          )}
 
 
         </div>
