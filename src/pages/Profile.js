@@ -326,7 +326,7 @@ function Profile() {
                     <Form.Check.Input type="radio" className="d-none" />
                     <Form.Check.Label >
                       <div className="package-content" >
-                        <h3 style={{ fontSize: '18px', marginTop: '15px' }}>{pkg.title}</h3>
+                        <h3 style={{ fontSize: '18px', marginTop: '15px',fontWeight:'bold' }}>{pkg.title}</h3>
                         <p style={{ fontSize: '14px' }} dangerouslySetInnerHTML={{ __html: pkg.description.replace('**', '<strong>').replace('**', '</strong>') }} />
                         <ul>
                           {pkg.list && pkg.list.map((item, index) => (

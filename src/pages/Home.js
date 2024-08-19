@@ -84,7 +84,7 @@ function Home() {
         console.log(`Plugin ${isActive ? 'deactivated' : 'activated'} successfully.`);
 
 
-        setToastMessage(`Plugin ${!isActive ? 'activated' : 'deactivated'} successfully.`);
+        setToastMessage(` ${pluginName} ${!isActive ? 'activated' : 'deactivated'} successfully.`);
 
         console.log(toastMessage);
 
@@ -205,16 +205,16 @@ function Home() {
 {toastMessage && (
   <div className="toast-message" style={{
     position: 'fixed',
-    top: '20px',
-    right: '20px',
-    backgroundColor: '#28a745',  // Başarılı mesaj için yeşil arka plan
-    color: 'white',  // Metin rengi beyaz
-    padding: '10px 20px',  // İç boşluk
-    borderRadius: '5px',  // Yuvarlak köşeler
-    zIndex: 9999,  // Yüksek bir z-index değeri
-    opacity: 0.9,  // Hafif şeffaflık
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',  // Hafif gölge efekti
-    transition: 'opacity 0.5s ease-in-out',  // Geçiş animasyonu
+    top: '50px',
+    right: '30px',
+    backgroundColor: '#28a745',  
+    color: 'white', 
+    padding: '10px 20px',  
+    borderRadius: '5px',  
+    zIndex: 9999,  
+    opacity: 0.8,  
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', 
+    transition: 'opacity 0.5s ease-in-out', 
   }}>
     {toastMessage}
   </div>
@@ -229,3 +229,5 @@ function Home() {
 }
 
 export default Home;
+
+//this field is required.
