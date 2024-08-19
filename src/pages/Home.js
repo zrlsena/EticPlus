@@ -205,8 +205,8 @@ function Home() {
 {toastMessage && (
   <div className="toast-message" style={{
     position: 'fixed',
-    top: '50px',
-    right: '30px',
+    top: '150px',
+    right: '600px',
     backgroundColor: '#28a745',  
     color: 'white', 
     padding: '10px 20px',  
@@ -231,3 +231,4 @@ function Home() {
 export default Home;
 
 //this field is required.
+//Invalid store name. Please check and try again.

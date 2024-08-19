@@ -29,7 +29,7 @@ function HomeRedirect() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState(false);
 
- 
+  // Define isAuthenticated function here as well
   const isAuthenticated = () => {
     return localStorage.getItem('jwt') !== null;
   };
@@ -42,27 +42,22 @@ function HomeRedirect() {
         },
       });
       if (!response.ok) {
-        const data = await response.json();
-        if (data.status === 500 && data.error === 'Internal Server Error') {
-          localStorage.removeItem('jwt');
-          setServerError(true);
-          navigate('/login');  
-        }
+        localStorage.removeItem('jwt');
+        navigate('/login'); 
       }
     } catch (error) {
       localStorage.removeItem('jwt');
-      setServerError(true);
-      navigate('/login');  
+      navigate('/login');  // Redirect to login if the fetch fails
     }
   };
 
   useEffect(() => {
     if (isAuthenticated()) {
-      checkServerStatus();  
+      checkServerStatus();  // Check server status when user is authenticated
     } else {
-      navigate('/login');  
+      navigate('/login');  // Redirect to login if not authenticated
     }
-  }, []);  
+  }, []);  // Run only on component mount
 
   if (serverError) {
     return <Navigate to="/login" />;
