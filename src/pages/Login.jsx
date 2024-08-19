@@ -14,11 +14,11 @@ const Login = () => {
   const validateInputs = () => {
     let isValid = true;
     if (!storeName) {
-      setStoreNameError('Store name field must not be left empty.');
+      setStoreNameError('This field is required.');
       isValid = false;
     }
     if (!password) {
-      setPasswordError('Password field must not be left empty.');
+      setPasswordError('This field is required.');
       isValid = false;
     }
     return isValid;

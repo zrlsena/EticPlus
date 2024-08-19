@@ -79,6 +79,11 @@ function Profile() {
   }, [navigate]);
 
 
+  useEffect(() => {
+    if (newPassword && confirmNewPassword && newPassword === confirmNewPassword) {
+      setConfirmPasswordError('');
+    }
+  }, [newPassword, confirmNewPassword]);
 
   const passwordCriteria = [
     { regex: /.{4,15}/, message: 'Password must be between 4 and 15 characters.' },
@@ -88,6 +93,8 @@ function Profile() {
     { regex: /^[^ğüşıöçĞÜŞİÖÇ]+$/, message: 'Password must not contain Turkish characters.' },
     { regex: /^\S*$/, message: 'Password must not contain spaces.' },
   ];
+
+  
 
   const validatePassword = (password) => {
     const errors = passwordCriteria
@@ -120,6 +127,15 @@ function Profile() {
       return;
     }
 
+    if (currentPassword && newPassword && !confirmNewPassword) {
+      setConfirmPasswordError('Confirm your new password!');
+      console.log('Confirm Password Error:', confirmPasswordError);
+
+      setToastMessage('Confirm your new password!');
+      setTimeout(() => setToastMessage(''), 2000);
+      passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
 
     if (currentPassword && !newPassword) {
       setToastMessage('Enter your new password!');
@@ -128,11 +144,6 @@ function Profile() {
 
       return;
     }
-
-
-
-
-
 
     let passwordErrors = [];
     if (newPassword || confirmNewPassword || currentPassword) {
@@ -143,9 +154,7 @@ function Profile() {
 
       if (passwordErrors.length > 0 || newPassword !== confirmNewPassword) {
         setConfirmPasswordError(newPassword !== confirmNewPassword ? 'Passwords do not match.' : '');
-
         passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-
         return;
       }
     } else {
@@ -307,7 +316,7 @@ function Profile() {
                   minLength="4"
                   maxLength="15"
                   placeholder="Current password"
-                  isInvalid={currentPassword && !!currentPasswordError} // Display only if there's input
+                  isInvalid={currentPassword && !!currentPasswordError} 
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='currentpasswordError'>
@@ -328,7 +337,7 @@ function Profile() {
                   minLength="4"
                   maxLength="15"
                   placeholder="New password"
-                  isInvalid={!!passwordValidationErrors.length && newPassword} // Display only if there's input
+                  isInvalid={!!passwordValidationErrors.length && newPassword} 
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>
@@ -350,7 +359,7 @@ function Profile() {
                   minLength="4"
                   maxLength="15"
                   placeholder="Confirm new password"
-                  isInvalid={confirmNewPassword && !!confirmPasswordError} // Display only if there's input
+                  isInvalid={!!confirmPasswordError} 
                   style={{ borderRadius: '16px', height: '42px', width: '360px', color: 'grey', fontSize: '18px' }}
                 />
                 <Form.Control.Feedback type="invalid" style={{ fontSize: '0.875rem', marginTop: '5px' }} className='passwordError'>

@@ -84,6 +84,16 @@ const SignUp = () => {
       isValid = false;
     }
 
+    if (!password) {
+      setPasswordError('This field is required.');
+      isValid = false;
+    }
+
+    if (!storeName) {
+      setStoreNameError('This field is required.');
+      isValid = false;
+    }
+
     if (!packageType) {
       setPackageError('Please select a package.');
       isValid = false;
