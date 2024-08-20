@@ -153,7 +153,7 @@ function Profile() {
 
 
       if (passwordErrors.length > 0 || newPassword !== confirmNewPassword) {
-        setConfirmPasswordError(newPassword !== confirmNewPassword ? 'Passwords do not match.' : '');
+        setConfirmPasswordError(newPassword !== confirmNewPassword ? 'Passwords does not match.' : '');
         passwordSectionRef.current.scrollIntoView({ behavior: 'smooth' });
         return;
       }
@@ -374,7 +374,7 @@ function Profile() {
 
       <div className="container mt-1" style={{ width: '1000px', maxHeight: '450px', minHeight: '400px' }}>
         <h2 className="text-start" style={{ width: '1000px', paddingLeft: '30px', fontSize: '36px', fontWeight: 'bold' }}>
-          Package Type
+        Choose Your Plan
         </h2>
         <Form className=" mt-3 rounded" style={{ height: '240px' }}>
           <Row className="mb-4">
